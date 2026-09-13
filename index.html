@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Reclutamiento — Tienda de Accesorios (Jesús María)</title>
+<title>Evaluación Postulantes SAFRI</title>
 <style>
 :root{
   --primary:#7c3aed; --primary-dark:#5b21b6; --accent:#ec4899;
@@ -59,11 +59,11 @@ textarea{resize:vertical;min-height:90px}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
 .timer-bar{height:8px;background:#e5e7eb;border-radius:99px;overflow:hidden;margin:8px 0 18px}
 .timer-bar > div{height:100%;background:linear-gradient(90deg,var(--accent),var(--bad));transition:width .3s linear}
-.prod-list{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
-.prod{background:#faf5ff;border:1px solid #e9d5ff;border-radius:10px;padding:12px;font-size:14px}
-.prod b{color:var(--primary-dark)}
-.seq{font-size:38px;font-weight:800;letter-spacing:12px;text-align:center;
-  color:var(--primary-dark);padding:24px;background:#f3e8ff;border-radius:12px;margin:16px 0}
+.prod-list{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0}
+@media(max-width:560px){.prod-list{grid-template-columns:1fr 1fr}}
+.prod{background:#faf5ff;border:1px solid #e9d5ff;border-radius:10px;padding:14px;font-size:13px;text-align:center}
+.prod .emoji{font-size:34px;display:block;line-height:1.2;margin-bottom:4px}
+.prod b{color:var(--primary-dark);font-size:15px}
 .counter{font-size:12px;color:var(--muted);text-align:right;margin-top:4px}
 .result-box{text-align:center;padding:26px;background:#f3e8ff;border-radius:14px;margin:14px 0}
 .code-box{background:#1f2937;color:#a7f3d0;padding:14px;border-radius:10px;
@@ -84,12 +84,23 @@ tr:hover td{background:#faf5ff}
 .detail .qa{margin-bottom:8px}
 .detail .qa .q{font-weight:600;color:#374151}
 .detail .qa .a{color:var(--muted)}
+.psy-box{background:linear-gradient(135deg,#faf5ff,#fce7f3);border:2px solid var(--primary);
+  border-radius:14px;padding:18px;margin:14px 0}
+.psy-box h4{font-size:14px;color:var(--primary-dark);margin-bottom:8px;letter-spacing:.5px}
+.psy-bar{height:22px;background:#e5e7eb;border-radius:99px;overflow:hidden;margin:6px 0 12px;position:relative}
+.psy-bar > div{height:100%;border-radius:99px;transition:width .6s ease}
+.psy-bar span{position:absolute;right:8px;top:2px;font-size:11px;font-weight:700;color:#fff;text-shadow:0 0 3px rgba(0,0,0,.4)}
+.psy-dim{margin-bottom:10px}
+.psy-dim label{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;color:#374151}
+.psy-dim label b{color:var(--primary-dark)}
+.psy-narrative{background:#fff;border-radius:10px;padding:14px;font-size:13px;line-height:1.7;color:#374151;margin-top:10px}
+.psy-narrative b{color:var(--primary-dark)}
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="header">
-    <h1>🌟 Reclutamiento — Tienda de Accesorios</h1>
+    <h1>🌟 Evaluación Postulantes SAFRI</h1>
     <p>Jesús María, Lima · Proceso de selección de personal</p>
   </div>
   <div id="app"></div>
@@ -102,9 +113,9 @@ tr:hover td{background:#faf5ff}
 /* ============================================================
    CONFIGURACIÓN
    ============================================================ */
-const ADMIN_PASSWORD = 'Tienda2024*';   // ← CLAVE DEL ADMINISTRADOR
-const TIEMPO_MINIMO_TEST = 240;         // seg. mínimos válidos del test completo
-const TIEMPO_CALCULO = 50;              // ⏱️ segundos para toda la sección de cálculo
+const ADMIN_PASSWORD = 'Tienda2024*';
+const TIEMPO_MINIMO_TEST = 180;
+const TIEMPO_POR_CALCULO = 50;   // ⏱️ segundos POR CADA pregunta de cálculo
 
 /* ============================================================
    DATOS BASE
@@ -122,7 +133,7 @@ const DISTRITOS_LIMA = [
 const GRADOS = ["Secundaria completa","Técnica","Superior"];
 
 /* ============================================================
-   SECCIÓN 1: PERSONALIDAD Y ACTITUD
+   SECCIÓN 1: PERSONALIDAD (6 preguntas)
    ============================================================ */
 const PREGUNTAS_PERSONALIDAD = [
   { id:'p1', texto:'Cuando no hay clientes en la tienda, lo primero que haces es:',
@@ -139,70 +150,28 @@ const PREGUNTAS_PERSONALIDAD = [
       {t:'Le pregunto qué le pasa y la aconsejo, pero no digo nada a la encargada.', p:-1},
       {t:'Le sugiero que hable con la encargada y le ofrezco acompañarla si quiere.', p:2}
     ]},
-  { id:'p3', texto:'Un cliente insiste en un descuento no autorizado y amenaza con irse sin comprar. Tú:',
-    opciones:[
-      {t:'Le ofrezco un pequeño obsequio (envoltura, bolsa de regalo) sin tocar el precio.', p:2},
-      {t:'Le hago un descuento mínimo con tal de cerrar la venta; es mejor vender que perder al cliente.', p:-3},
-      {t:'Le digo que puedo consultarlo con la encargada y le pido que espere unos minutos.', p:-1},
-      {t:'Le explico amablemente que no puedo y le muestro una alternativa dentro de su presupuesto.', p:3}
-    ]},
-  { id:'p4', texto:'Si te equivocas al dar el vuelto y te das cuenta recién al final del día:',
+  { id:'p3', texto:'Si te equivocas al dar el vuelto y te das cuenta recién al final del día:',
     opciones:[
       {t:'Anoto la diferencia en un papel para revisarlo con la encargada al día siguiente.', p:-1},
       {t:'Aviso de inmediato a la encargada y busco cómo solucionarlo con las boletas del día.', p:3},
       {t:'Si es poco, lo asumo yo para no hacer problemas.', p:-2},
       {t:'Reviso las boletas y si identifico al cliente, aviso a la encargada para devolverle.', p:2}
     ]},
-  { id:'p5', texto:'¿Qué te motiva a trabajar en una tienda de accesorios para damas?',
-    opciones:[
-      {t:'Me gusta la moda y quiero aprender del rubro para crecer aquí.', p:3},
-      {t:'Busco un ingreso estable mientras defino mis metas a futuro.', p:0},
-      {t:'Es una oportunidad para aprender de ventas y luego emprender algo mío.', p:-1},
-      {t:'Me gusta tratar con personas y asumir más responsabilidades con el tiempo.', p:2}
-    ]},
-  { id:'p6', texto:'Cuando tienes un problema familiar serio, ¿qué haces con tu trabajo?',
-    opciones:[
-      {t:'Lo resuelvo sin afectar mi trabajo, aunque tenga que pedir salir unos minutos.', p:-1},
-      {t:'Aviso con anticipación a la encargada y coordino cómo cubrir mi turno.', p:3},
-      {t:'Busco solución con el equipo y cumplo mi horario sin descuidar mi responsabilidad.', p:2},
-      {t:'Priorizo mi familia; si es grave, dejo el trabajo para no fallar en ninguno de los dos lados.', p:-2}
-    ]},
-  { id:'p7', texto:'Si la encargada te corrige frente a un cliente:',
-    opciones:[
-      {t:'Acepto delante del cliente, termino la atención y luego converso en privado con ella.', p:3},
-      {t:'Le hago una seña discreta para que no siga delante del cliente y luego aclaro.', p:-1},
-      {t:'Sigo atendiendo y en privado le explico mi versión de los hechos.', p:-1},
-      {t:'Me concentro en el cliente y luego le pido a la encargada que me diga cómo mejorar.', p:2}
-    ]},
-  { id:'p8', texto:'Sobre el uso del celular en horario de trabajo:',
+  { id:'p4', texto:'Sobre el uso del celular en horario de trabajo:',
     opciones:[
       {t:'Lo uso brevemente para coordinar temas personales urgentes; hoy todos lo hacemos.', p:-2},
       {t:'Lo mantengo guardado; solo lo reviso en mi refrigerio y en emergencias reales.', p:3},
       {t:'Lo tengo a la vista porque a veces lo uso para mostrar productos o tomar fotos.', p:2},
       {t:'Lo reviso en ratos libres cuando no hay público; es algo normal.', p:-2}
     ]},
-  { id:'p9', texto:'Sobre quedarte después de tu horario cuando hay mucho trabajo:',
-    opciones:[
-      {t:'Me quedo si me lo piden con anticipación; tengo compromisos personales que respetar.', p:0},
-      {t:'Me quedo con gusto y luego coordino con la encargada el tiempo compensado.', p:3},
-      {t:'Me quedo solo si la encargada también se queda; así no me quedo sola.', p:-1},
-      {t:'Prefiero cumplir mi horario; lo de la tienda no debería ser mi problema fuera de hora.', p:-2}
-    ]},
-  { id:'p10', texto:'Al cerrar el día, el sistema muestra S/ 30 de más respecto a lo que hay físicamente en caja. ¿Qué haces?',
+  { id:'p5', texto:'Al cerrar el día, el sistema muestra S/ 30 de más respecto a lo que hay físicamente en caja. ¿Qué haces?',
     opciones:[
       {t:'Lo pongo como sobrante y lo reporto en el cierre del mes, para no hacer ajustes diarios.', p:-1},
       {t:'Lo reporto por escrito a la encargada en el momento y dejo constancia firmada.', p:3},
       {t:'Reviso las boletas del día para ver si fue un vuelto mal dado y aviso de inmediato.', p:2},
       {t:'Lo guardo en un sobre con una nota y lo comento al día siguiente.', p:0}
     ]},
-  { id:'p11', texto:'Una clienta mayor te pide ayuda para elegir un regalo y tú no conoces bien el producto:',
-    opciones:[
-      {t:'Le muestro los productos más populares del mes; suelen gustar a todos.', p:0},
-      {t:'Le pregunto para quién es, su presupuesto y ocasión, y le muestro opciones con calma.', p:3},
-      {t:'Le sugiero que espere a la encargada, ella conoce mejor el producto.', p:-1},
-      {t:'Le muestro 2 o 3 opciones y le explico las diferencias con calma.', p:2}
-    ]},
-  { id:'p12', texto:'¿Cómo reaccionas si te dicen que tu horario cambiará la próxima semana (mañana por tarde)?',
+  { id:'p6', texto:'¿Cómo reaccionas si te dicen que tu horario cambiará la próxima semana (mañana por tarde)?',
     opciones:[
       {t:'Me adapto, entiendo que la tienda lo necesita; luego coordino detalles con la encargada.', p:3},
       {t:'Aviso que no puedo, tengo otras responsabilidades asumidas para ese horario.', p:-1},
@@ -212,9 +181,7 @@ const PREGUNTAS_PERSONALIDAD = [
 ];
 
 /* ============================================================
-   SECCIÓN 2: COMUNICACIÓN Y PERSUASIÓN
-   Perfil buscado: extrovertida, empática, capaz de romper el hielo
-   con humor apropiado y generar confianza para cerrar la venta.
+   SECCIÓN 2: COMUNICACIÓN Y PERSUASIÓN (5 preguntas)
    ============================================================ */
 const PREGUNTAS_COMUNICACION = [
   { id:'co1', texto:'Entra una clienta con cara de pocos amigos, sin mirar nada. ¿Cuál es tu primera reacción?',
@@ -224,110 +191,77 @@ const PREGUNTAS_COMUNICACION = [
       {t:'Me acerco y le pregunto directamente qué busca, para no perder tiempo.', p:1},
       {t:'Le comento el clima o algo casual para romper el hielo antes de ofrecerle algo.', p:2}
     ]},
-  { id:'co2', texto:'Una clienta duda entre dos carteras y dice: "No sé, me gustan las dos pero solo puedo llevar una". ¿Qué le dices?',
-    opciones:[
-      {t:'"Piénselo con calma y me avisa" y la dejo decidir sola.', p:0},
-      {t:'Le digo cuál se ve mejor con el color de ropa que trae puesto y por qué le sacará más provecho.', p:3},
-      {t:'Le digo: "Lleve la más cara, dura más", y le explico la calidad.', p:-1},
-      {t:'Le propongo: "Mire, si se anima, la segunda se la dejo con un pequeño descuento para la próxima visita".', p:2}
-    ]},
-  { id:'co3', texto:'Un cliente varón entra a comprar un regalo para su esposa y no tiene idea qué elegir. Se le nota incómodo. ¿Qué haces?',
+  { id:'co2', texto:'Un cliente varón entra a comprar un regalo para su esposa y no tiene idea qué elegir. Se le nota incómodo. ¿Qué haces?',
     opciones:[
       {t:'Le digo en broma: "Tranquilo, no es examen, solo es un regalo. La ayudamos a quedar como héroe".', p:3},
       {t:'Le pregunto por el estilo de su esposa y le muestro 2 o 3 opciones que combinen.', p:3},
       {t:'Le digo: "Cualquiera le va a gustar, todas son bonitas".', p:-1},
       {t:'Le sugiero el producto más vendido y le explico por qué es un acierto seguro.', p:2}
     ]},
-  { id:'co4', texto:'Una clienta te dice: "Está muy caro, en la tienda de la esquina lo vi más barato". ¿Cuál es la mejor respuesta?',
+  { id:'co3', texto:'Una clienta te dice: "Está muy caro, en la tienda de la esquina lo vi más barato". ¿Cuál es la mejor respuesta?',
     opciones:[
       {t:'"Puede ser, pero le aseguro que la calidad no es la misma; esto le va a durar el doble".', p:2},
       {t:'"Tiene razón, es un poco más, pero mire el detalle del cierre y el material; eso marca la diferencia".', p:3},
       {t:'"Si quiere le puedo hacer un descuentito, pero no se lo diga a nadie".', p:-2},
       {t:'"Bueno, si lo encuentra más barato, llévelo allá".', p:-3}
     ]},
-  { id:'co5', texto:'Estás atendiendo a una clienta y entra otra apurada pidiendo algo rápido. ¿Qué haces?',
+  { id:'co4', texto:'Estás atendiendo a una clienta y entra otra apurada pidiendo algo rápido. ¿Qué haces?',
     opciones:[
       {t:'Le digo a la segunda: "Un momentito, en cuanto termine con ella la atiendo, no se me va".', p:3},
       {t:'Dejo a la primera y atiendo a la segunda, porque se ve más apurada.', p:-2},
       {t:'Les digo a las dos: "Ya las atiendo, por favor un momento", y trato de repartirme.', p:2},
       {t:'Le pido a la primera que espere un momento y atiendo rápido a la segunda.', p:0}
     ]},
-  { id:'co6', texto:'¿Cómo describirías tu estilo al atender a un cliente nuevo?',
+  { id:'co5', texto:'¿Cómo describirías tu estilo al atender a un cliente nuevo?',
     opciones:[
       {t:'Amable pero directa: le muestro lo que necesita y cierro la venta rápido.', p:0},
       {t:'Cercana y conversadora: me gusta que se sienta cómoda, incluso me río con ellos si se da el momento.', p:3},
       {t:'Respetuosa y tranquila: dejo que ellos tomen la iniciativa.', p:-1},
       {t:'Con chispa y buena energía: una broma ligera siempre rompe el hielo.', p:2}
-    ]},
-  { id:'co7', texto:'Una clienta te cuenta un problema personal (su hija se casa, se peleó con su hermana, etc.) mientras compra. ¿Qué haces?',
-    opciones:[
-      {t:'La escucho con atención, le doy una respuesta cálida y sigo con la venta con naturalidad.', p:3},
-      {t:'Le doy mi opinión sincera sobre el problema, ya que me lo contó.', p:-1},
-      {t:'Cambio de tema rápido para no perder tiempo en la venta.', p:-2},
-      {t:'La escucho, empatizo breve y la traigo de vuelta al producto con suavidad.', p:3}
-    ]},
-  { id:'co8', texto:'Al cerrar la venta, ¿qué haces para que la clienta vuelva?',
-    opciones:[
-      {t:'Le agradezco y le digo: "Vuelva pronto, aquí siempre la atendemos con gusto".', p:2},
-      {t:'Le comento que pronto llegará mercadería nueva y le muestro una foto para que vuelva a ver.', p:3},
-      {t:'Le doy mi número o el de la tienda por si necesita algo.', p:2},
-      {t:'Nada especial, con que se vaya contenta basta.', p:0}
     ]}
 ];
 
 /* ============================================================
-   SECCIÓN 3: MEMORIA (5 productos · 25 s)
+   SECCIÓN 3: MEMORIA VISUAL (imágenes/emojis)
    ============================================================ */
 const PRODUCTOS_MEMORIA = [
-  {n:'Cartera negra',    p:89},
-  {n:'Aretes dorados',   p:25},
-  {n:'Blusa floreada',   p:45},
-  {n:'Collar de perlas', p:60},
-  {n:'Pulsera de plata', p:35}
+  {emoji:'👛', n:'Cartera roja',    p:89},
+  {emoji:'💍', n:'Anillo dorado',   p:45},
+  {emoji:'📿', n:'Collar de perlas',p:60},
+  {emoji:'👜', n:'Cartera negra',   p:120},
+  {emoji:'👂', n:'Aretes',          p:25},
+  {emoji:'⌚', n:'Pulsera',         p:35}
 ];
 const PREGUNTAS_MEMORIA = [
-  {id:'m1', t:'¿Cuánto costaba el collar de perlas?', ops:['S/ 45','S/ 60','S/ 35','S/ 89'], ok:1},
-  {id:'m2', t:'¿Qué artículo costaba S/ 45?', ops:['Pulsera de plata','Blusa floreada','Aretes dorados','Collar de perlas'], ok:1},
-  {id:'m3', t:'¿Cuál era el artículo más barato?', ops:['Aretes dorados','Pulsera de plata','Blusa floreada','Collar de perlas'], ok:0},
-  {id:'m4', t:'¿Cuántos artículos costaban más de S/ 50?', ops:['1','2','3','Ninguno'], ok:1},
-  {id:'m5', t:'¿Cuál era el precio de la cartera negra?', ops:['S/ 60','S/ 89','S/ 95','S/ 45'], ok:1}
+  {id:'m1', t:'¿Qué emoji tenía el precio más alto?', ops:['👛','💍','👜','📿'], ok:2},
+  {id:'m2', t:'¿Cuánto costaba el 📿 collar de perlas?', ops:['S/ 45','S/ 60','S/ 35','S/ 89'], ok:1},
+  {id:'m3', t:'¿Cuál de estos emojis NO apareció?', ops:['⌚','💍','👠','👂'], ok:2},
+  {id:'m4', t:'¿Cuántos productos había en total?', ops:['4','5','6','7'], ok:2},
+  {id:'m5', t:'¿Qué producto costaba S/ 25?', ops:['👂 Aretes','⌚ Pulsera','💍 Anillo','📿 Collar'], ok:0}
 ];
-const SECUENCIA_MEMORIA = '4 7 2 9 1';
 
 /* ============================================================
-   SECCIÓN 4: CÁLCULO (8 preguntas · 50 s totales)
+   SECCIÓN 4: CÁLCULO (4 preguntas · 50 s CADA UNA)
    ============================================================ */
 const PREGUNTAS_CALCULO = [
   {id:'c1', t:'Un cliente compra: cartera S/ 89 + aretes S/ 25 + blusa S/ 45. Paga con S/ 200. ¿Cuál es el vuelto?',
     ops:['S/ 41','S/ 51','S/ 31','S/ 45'], ok:0},
   {id:'c2', t:'Aplica un 20% de descuento a un producto de S/ 150. ¿Cuál es el precio final?',
     ops:['S/ 130','S/ 135','S/ 120','S/ 125'], ok:2},
-  {id:'c3', t:'En caja tienes: 3 billetes de S/ 50, 5 de S/ 20, 8 monedas de S/ 5 y 12 monedas de S/ 1. ¿Cuánto hay en total?',
-    ops:['S/ 302','S/ 312','S/ 292','S/ 282'], ok:0},
-  {id:'c4', t:'Si 3 carteras cuestan S/ 240, ¿cuánto cuesta 1 cartera?',
-    ops:['S/ 60','S/ 80','S/ 90','S/ 70'], ok:1},
-  {id:'c5', t:'¿Cuál es el 15% de S/ 80?',
-    ops:['S/ 15','S/ 10','S/ 12','S/ 14'], ok:2},
-  {id:'c6', t:'Una blusa de S/ 60 tiene 25% de descuento. ¿Cuál es el precio final?',
-    ops:['S/ 45','S/ 40','S/ 50','S/ 55'], ok:0},
-  {id:'c7', t:'Cuadre del día: ventas S/ 1250. En caja hay S/ 1180 + Yape/Plin S/ 45. ¿Falta o sobra y cuánto?',
+  {id:'c3', t:'Cuadre del día: ventas S/ 1250. En caja hay S/ 1180 + Yape/Plin S/ 45. ¿Falta o sobra y cuánto?',
     ops:['Sobra S/ 25','Falta S/ 25','Falta S/ 30','Está exacto'], ok:1},
-  {id:'c8', t:'Un cliente paga S/ 100 por 2 artículos de S/ 35 cada uno. ¿Cuál es el vuelto?',
+  {id:'c4', t:'Un cliente paga S/ 100 por 2 artículos de S/ 35 cada uno. ¿Cuál es el vuelto?',
     ops:['S/ 25','S/ 30','S/ 35','S/ 20'], ok:1}
 ];
 
 /* ============================================================
-   SECCIÓN 5: PREGUNTAS ABIERTAS (anti-IA)
+   SECCIÓN 5: PREGUNTAS ABIERTAS (2)
    ============================================================ */
 const PREGUNTAS_ABIERTAS = [
-  {id:'a1', t:'Describe brevemente tu último trabajo o, si nunca has trabajado, una situación en la que asumiste una responsabilidad (casa, estudios, voluntariado). Incluye: la inicial del nombre de una persona involucrada y el mes aproximado.',
-   maxPalabras:60},
-  {id:'a2', t:'¿Cuál es tu distrito de residencia y cuánto tiempo demoras en llegar a Jesús María? Menciona el transporte exacto que usarías (línea de bus, metro, combi, etc.).',
-   maxPalabras:40},
-  {id:'a3', t:'Escribe una frase que te haya dicho un familiar o profesor y que recuerdes hasta hoy. Indica quién te la dijo (solo inicial) y en qué contexto.',
-   maxPalabras:40},
-  {id:'a4', t:'Si tuvieras que vender una cartera de S/ 120 a una clienta que dice "está muy cara", ¿qué le dirías? Escribe EXACTAMENTE las palabras que usarías, como si estuvieras hablando.',
-   maxPalabras:50}
+  {id:'a1', t:'Cuéntanos brevemente tu último trabajo o, si nunca has trabajado, una situación donde asumiste una responsabilidad. Incluye la inicial del nombre de una persona involucrada y el mes aproximado.',
+   maxPalabras:70},
+  {id:'a2', t:'Si tuvieras que vender una cartera de S/ 120 a una clienta que dice "está muy caro", ¿qué le dirías? Escribe EXACTAMENTE las palabras que usarías, como si estuvieras hablando.',
+   maxPalabras:60}
 ];
 
 /* ============================================================
@@ -342,7 +276,8 @@ function decodeRes(c){try{return JSON.parse(decodeURIComponent(escape(atob(c.tri
 
 let S = {
   registro:{}, respuestas:{personalidad:{},comunicacion:{},memoria:{},calculo:{},abiertas:{}},
-  orden:{}, flags:{tab:0,paste:0,inicio:null,fin:null}, timers:{}
+  orden:{}, flags:{tab:0,paste:0,inicio:null,fin:null},
+  timers:{calculoInterval:null,calculoRestante:0,tiemposCalculo:[]}
 };
 
 /* ============================================================
@@ -446,11 +381,11 @@ function vIntroTest(){
     <div class="notice danger">
       <b>Lee con atención:</b> este test tiene 5 secciones:
       <ol style="margin:8px 0 0 18px">
-        <li>Personalidad y actitud (12 preguntas)</li>
-        <li>Comunicación y persuasión con el cliente (8 preguntas)</li>
-        <li>Prueba de memoria (con tiempo limitado)</li>
-        <li>Prueba de cálculo para caja (⏱️ 50 segundos para TODA la sección)</li>
-        <li>Preguntas abiertas (respuestas personales)</li>
+        <li>Personalidad y actitud (6 preguntas)</li>
+        <li>Comunicación y persuasión con el cliente (5 preguntas)</li>
+        <li>Prueba de memoria visual (con tiempo limitado)</li>
+        <li>Prueba de cálculo para caja (⏱️ 50 segundos por pregunta)</li>
+        <li>Dos preguntas abiertas finales</li>
       </ol>
     </div>
     <div class="notice">
@@ -493,7 +428,7 @@ function vPersonalidad(i){
 }
 
 /* ============================================================
-   SECCIÓN 2: COMUNICACIÓN Y PERSUASIÓN
+   SECCIÓN 2: COMUNICACIÓN
    ============================================================ */
 function vComunicacion(i){
   if(i >= PREGUNTAS_COMUNICACION.length){ return vMemoria1(); }
@@ -523,16 +458,16 @@ function vComunicacion(i){
 }
 
 /* ============================================================
-   SECCIÓN 3: MEMORIA
+   SECCIÓN 3: MEMORIA VISUAL
    ============================================================ */
 function vMemoria1(){
   render(`
   <div class="card">
-    <h2>🧠 Prueba de memoria — Parte 1</h2>
-    <div class="notice">Memoriza los siguientes <b>5 productos</b> y sus precios. Tendrás <b>25 segundos</b>. No tomes notas.</div>
+    <h2>🧠 Prueba de memoria visual</h2>
+    <div class="notice">Memoriza las siguientes <b>6 imágenes</b> con sus precios. Tendrás <b>25 segundos</b>. No tomes notas.</div>
     <div class="timer" id="tmr">25</div>
     <div class="prod-list">
-      ${PRODUCTOS_MEMORIA.map(p=>`<div class="prod">${esc(p.n)}<br><b>S/ ${p.p}</b></div>`).join('')}
+      ${PRODUCTOS_MEMORIA.map(p=>`<div class="prod"><span class="emoji">${p.emoji}</span>${esc(p.n)}<br><b>S/ ${p.p}</b></div>`).join('')}
     </div>
   </div>`);
   let t = 25;
@@ -545,7 +480,7 @@ function vMemoria1(){
 function vMemoria2(){
   render(`
   <div class="card">
-    <h2>🧠 Prueba de memoria — Preguntas</h2>
+    <h2>🧠 Preguntas de memoria visual</h2>
     <div class="notice">Responde según lo que recuerdes. No vuelvas atrás.</div>
     ${PREGUNTAS_MEMORIA.map((q,i)=>`
       <div class="field">
@@ -557,7 +492,7 @@ function vMemoria2(){
             </label>`).join('')}
         </div>
       </div>`).join('')}
-    <button class="btn" id="btnMem" disabled onclick="vMemoria3()">Continuar →</button>
+    <button class="btn" id="btnMem" disabled onclick="vCalculo(0)">Continuar →</button>
   </div>`);
   window.selMem = function(qid,k,txt,origIdx){
     S.respuestas.memoria[qid] = {txt, origIdx, correcta: PREGUNTAS_MEMORIA.find(p=>p.id===qid).ok === origIdx};
@@ -570,68 +505,24 @@ function vMemoria2(){
   };
 }
 
-function vMemoria3(){
-  render(`
-  <div class="card">
-    <h2>🧠 Prueba de memoria — Secuencia</h2>
-    <div class="notice">Memoriza la siguiente secuencia. Tendrás <b>8 segundos</b>.</div>
-    <div class="timer" id="tmr2">8</div>
-    <div class="seq" id="seqBox">${SECUENCIA_MEMORIA}</div>
-  </div>`);
-  let t = 8;
-  const iv = setInterval(()=>{
-    t--; const el=$('tmr2'); if(el) el.textContent=t;
-    if(t<=0){ clearInterval(iv); $('seqBox').textContent='• • • • •'; vMemoria4(); }
-  },1000);
-}
-
-function vMemoria4(){
-  render(`
-  <div class="card">
-    <h2>🧠 Escribe la secuencia que viste</h2>
-    <div class="notice">Escríbela con espacios entre números (ej. 1 2 3 4 5).</div>
-    <input id="inpSeq" placeholder="Escribe la secuencia..." autocomplete="off">
-    <br><br>
-    <button class="btn" onclick="guardarSeq()">Continuar →</button>
-  </div>`);
-}
-
-function guardarSeq(){
-  const v = ($('inpSeq').value||'').replace(/\s+/g,' ').trim();
-  S.respuestas.memoria.secuencia = {txt:v, correcta: v === SECUENCIA_MEMORIA};
-  vCalculo(0);
-}
-
 /* ============================================================
-   SECCIÓN 4: CÁLCULO CON TEMPORIZADOR DE 50 SEGUNDOS
+   SECCIÓN 4: CÁLCULO — 50 segundos POR PREGUNTA
    ============================================================ */
 function vCalculo(i){
-  // Si ya terminó todas las preguntas → guardar y continuar
-  if(i >= PREGUNTAS_CALCULO.length){
-    detenerTimerCalculo();
-    return vAbiertas();
-  }
-  // Si es la primera vez, iniciar el temporizador
-  if(i === 0 && !S.timers.calculoIniciado){
-    S.timers.calculoIniciado = true;
-    S.timers.calculoRestante = TIEMPO_CALCULO;
-    S.timers.calculoInicio = Date.now();
-  }
-
+  if(i >= PREGUNTAS_CALCULO.length){ return vAbiertas(); }
   const q = PREGUNTAS_CALCULO[i];
   const ops = S.orden[q.id];
   const total = PREGUNTAS_CALCULO.length;
   const prog = (i/total)*100;
-  const restante = S.timers.calculoRestante;
 
   render(`
   <div class="card">
     <div class="progress"><div style="width:${prog}%"></div></div>
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
       <p style="font-size:12px;color:var(--muted)">Pregunta ${i+1} de ${total} · Sección 4 — Caja</p>
-      <p style="font-size:13px;font-weight:700;color:${restante<=15?'var(--bad)':'var(--accent)'}">⏱️ <span id="tmrCalc">${restante}</span> s</p>
+      <p style="font-size:13px;font-weight:700;color:var(--accent)">⏱️ <span id="tmrCalc">${TIEMPO_POR_CALCULO}</span> s</p>
     </div>
-    <div class="timer-bar"><div id="barCalc" style="width:${(restante/TIEMPO_CALCULO)*100}%"></div></div>
+    <div class="timer-bar"><div id="barCalc" style="width:100%"></div></div>
     <h2>${esc(q.t)}</h2>
     <div id="opsCal">
       ${ops.map((o,k)=>`
@@ -639,17 +530,8 @@ function vCalculo(i){
           ${esc(o.o)}
         </label>`).join('')}
     </div>
-    <button class="btn" id="btnCal" disabled onclick="vCalculo(${i+1})">Siguiente →</button>
+    <button class="btn" id="btnCal" disabled onclick="siguienteCalculo(${i})">Siguiente →</button>
   </div>`);
-
-  // Si ya hay una respuesta guardada de esta pregunta (por recarga), marcar
-  if(S.respuestas.calculo[q.id]){
-    const idx = ops.findIndex(o=>o.i === S.respuestas.calculo[q.id].origIdx);
-    if(idx >= 0){
-      document.querySelectorAll('#opsCal .opt')[idx].classList.add('sel');
-      $('btnCal').disabled = false;
-    }
-  }
 
   window.selCal = function(qid,k,txt,origIdx){
     S.respuestas.calculo[qid] = {txt, origIdx, correcta: PREGUNTAS_CALCULO.find(p=>p.id===qid).ok === origIdx};
@@ -658,29 +540,45 @@ function vCalculo(i){
     $('btnCal').disabled = false;
   };
 
-  iniciarTimerCalculo();
+  iniciarTimerCalculoPregunta(i);
 }
 
-function iniciarTimerCalculo(){
+function iniciarTimerCalculoPregunta(indicePregunta){
   detenerTimerCalculo();
+  S.timers.calculoRestante = TIEMPO_POR_CALCULO;
+  const t0 = Date.now();
   S.timers.calculoInterval = setInterval(()=>{
     S.timers.calculoRestante--;
     const t = S.timers.calculoRestante;
     const el = $('tmrCalc'), bar = $('barCalc');
-    if(el){ el.textContent = t; el.style.color = t<=15 ? 'var(--bad)' : 'var(--accent)'; }
-    if(bar){ bar.style.width = (Math.max(t,0)/TIEMPO_CALCULO*100)+'%'; }
+    if(el){ el.textContent = t; el.parentElement.style.color = t<=15 ? 'var(--bad)' : 'var(--accent)'; }
+    if(bar){ bar.style.width = (Math.max(t,0)/TIEMPO_POR_CALCULO*100)+'%'; }
     if(t <= 0){
       detenerTimerCalculo();
-      // Tiempo agotado: se registran como incorrectas las no respondidas
-      PREGUNTAS_CALCULO.forEach(q=>{
-        if(!S.respuestas.calculo[q.id]){
-          S.respuestas.calculo[q.id] = {txt:'(sin responder)', origIdx:-1, correcta:false};
-        }
-      });
-      alert('⏱️ ¡Tiempo agotado! Pasamos a la siguiente sección.');
-      vAbiertas();
+      // Registrar tiempo usado para esta pregunta
+      S.timers.tiemposCalculo[indicePregunta] = TIEMPO_POR_CALCULO;
+      // Si no respondió, marcar como incorrecta
+      const qid = PREGUNTAS_CALCULO[indicePregunta].id;
+      if(!S.respuestas.calculo[qid]){
+        S.respuestas.calculo[qid] = {txt:'(sin responder)', origIdx:-1, correcta:false};
+      }
+      // Pasar a la siguiente sin alert
+      vCalculo(indicePregunta+1);
     }
   },1000);
+  S.timers.calculoInicioPregunta = t0;
+}
+
+function siguienteCalculo(i){
+  const qid = PREGUNTAS_CALCULO[i].id;
+  const tiempoUsado = TIEMPO_POR_CALCULO - S.timers.calculoRestante;
+  S.timers.tiemposCalculo[i] = tiempoUsado;
+  detenerTimerCalculo();
+  // Si no respondió (no debería pasar porque el botón está deshabilitado, pero por seguridad)
+  if(!S.respuestas.calculo[qid]){
+    S.respuestas.calculo[qid] = {txt:'(sin responder)', origIdx:-1, correcta:false};
+  }
+  vCalculo(i+1);
 }
 
 function detenerTimerCalculo(){
@@ -688,7 +586,7 @@ function detenerTimerCalculo(){
 }
 
 /* ============================================================
-   SECCIÓN 5: PREGUNTAS ABIERTAS
+   SECCIÓN 5: PREGUNTAS ABIERTAS (2)
    ============================================================ */
 function vAbiertas(){
   detenerTimerCalculo();
@@ -723,7 +621,7 @@ function marcarPaste(e){
 }
 
 /* ============================================================
-   FINALIZAR
+   FINALIZAR + AUDITORÍA PSICOMÉTRICA
    ============================================================ */
 function finalizarTest(){
   detenerTimerCalculo();
@@ -734,9 +632,7 @@ function finalizarTest(){
   }
   S.flags.fin = Date.now();
   S.flags.tiempoTotal = Math.round((S.flags.fin - S.flags.inicio)/1000);
-  const tiempoCalculoUsado = TIEMPO_CALCULO - S.timers.calculoRestante;
 
-  // Puntajes
   let pPers = 0, maxPers = 0;
   PREGUNTAS_PERSONALIDAD.forEach(q=>{ pPers += S.respuestas.personalidad[q.id]?.p ?? 0; maxPers += 3; });
   let pCom = 0, maxCom = 0;
@@ -745,16 +641,20 @@ function finalizarTest(){
   Object.values(S.respuestas.memoria).forEach(m=>{ if(m.correcta) pMem++; });
   let pCal = 0;
   Object.values(S.respuestas.calculo).forEach(c=>{ if(c.correcta) pCal++; });
+  const tiempoCalculoTotal = (S.timers.tiemposCalculo||[]).reduce((a,b)=>a+b,0);
 
-  // Flags
   const flags = [];
   if(S.flags.tiempoTotal < TIEMPO_MINIMO_TEST) flags.push('Tiempo total muy bajo ('+S.flags.tiempoTotal+'s) — posible uso de IA o respuestas al azar.');
   if(S.flags.tab > 2) flags.push('Cambios de pestaña detectados ('+S.flags.tab+') — posible búsqueda externa.');
   if(S.flags.paste > 0) flags.push('Intento(s) de pegar texto ('+S.flags.paste+') — posible uso de IA.');
   if(S.registro.modalidad === 'Full time' && S.registro.permanencia === '3 meses')
     flags.push('Coherencia: eligió Full time pero permanencia de solo 3 meses.');
-  if(tiempoCalculoUsado < 15 && pCal >= 6)
-    flags.push('Cálculo resuelto en tiempo récord ('+tiempoCalculoUsado+'s para 8 preguntas) — verificar en entrevista.');
+
+  // Auditoría psicométrica
+  const psico = auditarPsicometricamente({
+    pPers, maxPers, pCom, maxCom, pMem, pCal,
+    tiemposCalculo: S.timers.tiemposCalculo, flags, S
+  });
 
   const resultado = {
     ...S.registro,
@@ -762,14 +662,16 @@ function finalizarTest(){
     puntajes: {
       personalidad:pPers, maxPersonalidad:maxPers,
       comunicacion:pCom, maxComunicacion:maxCom,
-      memoria:pMem, maxMemoria:PREGUNTAS_MEMORIA.length+1,
+      memoria:pMem, maxMemoria:PREGUNTAS_MEMORIA.length,
       calculo:pCal, maxCalculo:PREGUNTAS_CALCULO.length
     },
-    tiempoCalculoUsado,
+    tiempoCalculoTotal,
+    tiemposCalculo: S.timers.tiemposCalculo,
     respuestas: S.respuestas,
     flags,
     flagCount: {tab:S.flags.tab, paste:S.flags.paste, tiempoTotal:S.flags.tiempoTotal},
-    abiertas: S.respuestas.abiertas
+    abiertas: S.respuestas.abiertas,
+    psicometrico: psico
   };
 
   try{
@@ -796,6 +698,128 @@ function finalizarTest(){
     </div>
   </div>`);
   window.__lastResult = resultado;
+}
+
+/* ============================================================
+   AUDITORÍA PSICOMÉTRICA "IA"
+   Analiza respuestas y genera un informe estructurado.
+   ============================================================ */
+function auditarPsicometricamente({pPers,maxPers,pCom,maxCom,pMem,pCal,tiemposCalculo,flags,S}){
+  const resp = S.respuestas;
+  const pctPers = maxPers? (pPers/maxPers)*100 : 0;
+  const pctCom  = maxCom ? (pCom/maxCom)*100 : 0;
+  const pctMem  = (pMem/PREGUNTAS_MEMORIA.length)*100;
+  const pctCal  = (pCal/PREGUNTAS_CALCULO.length)*100;
+
+  // Dimensiones psicométricas (0-100)
+  // Extroversión: iniciativas de contacto, humor, proactividad al cliente
+  let extro = pctCom*0.7 + pctPers*0.3;
+  // Amabilidad/Empatía: escucha, colaboración, tacto
+  let amab = pctCom*0.5 + pctPers*0.5;
+  // Responsabilidad: caja, celular, reportes
+  let respo = pctPers*0.6 + pctCal*0.4;
+  // Estabilidad emocional: reacción a la corrección, presión, cambio de horario
+  let estab = (resp.personalidad.p6?.p>=2?90:60) + (resp.personalidad.p2?.p>=2?90:60) + (resp.comunicacion.co4?.p>=2?90:60);
+  estab = estab/3;
+  // Apertura / Iniciativa: proactividad, aprendizaje, retos
+  let apert = pctPers*0.6 + pctCom*0.4;
+  // Resiliencia comercial: cierre de ventas, manejo de objeciones
+  let resil = (resp.comunicacion.co3?.p>=2?90:50) + (resp.comunicacion.co5?.p>=2?90:55) + pctCom;
+  resil = resil/3;
+
+  // Ajustes finos por señales específicas
+  if(resp.personalidad.p4?.p < 0) respo -= 15;   // uso celular
+  if(resp.personalidad.p5?.p < 0) respo -= 20;   // reporte caja
+  if(resp.personalidad.p2?.p >= 3) respo += 10; // reporta a compañera
+  if(resp.comunicacion.co2?.p >= 3) extro += 10; // humor con cliente
+  if(resp.comunicacion.co3?.p >= 3) resil += 10; // manejo de objeción
+  if(resp.comunicacion.co1?.p >= 3) extro += 5;
+
+  // Penalización por flags
+  const penal = flags.length*5;
+
+  extro = Math.max(0, Math.min(100, extro - penal*0.3));
+  amab  = Math.max(0, Math.min(100, amab  - penal*0.3));
+  respo = Math.max(0, Math.min(100, respo - penal*0.5));
+  estab = Math.max(0, Math.min(100, estab - penal*0.3));
+  apert = Math.max(0, Math.min(100, apert - penal*0.3));
+  resil = Math.max(0, Math.min(100, resil - penal*0.4));
+
+  const prom = (extro+amab+respo+estab+apert+resil)/6;
+
+  // Perfil conductual
+  let perfil, perfilColor;
+  if(prom>=78 && flags.length===0){ perfil='PERFIL IDEAL — Vendedora estrella'; perfilColor='good'; }
+  else if(prom>=65){ perfil='PERFIL PROMETEDOR — Requiere refuerzo en entrevista'; perfilColor='warn'; }
+  else if(prom>=50){ perfil='PERFIL MODERADO — Evaluar con cuidado'; perfilColor='warn'; }
+  else { perfil='PERFIL DE RIESGO — No recomendado para atención directa'; perfilColor='bad'; }
+
+  // Riesgos detectados
+  const riesgos = [];
+  if(estab < 60) riesgos.push('Posible baja tolerancia a la corrección o al cambio de horario.');
+  if(respo < 60) riesgos.push('Señales de descuido en caja o uso del celular en horario laboral.');
+  if(extro < 60) riesgos.push('Tendencia a actitud pasiva con el cliente; dificultad para romper el hielo.');
+  if(resil < 60) riesgos.push('Dificultad para manejar objeciones de precio o clientes indecisos.');
+  if(amab < 60)  riesgos.push('Baja empatía percibida; podría no conectar con clientas mayores.');
+  if(pctMem < 50) riesgos.push('Memoria visual por debajo del promedio; puede afectar exhibición y precios.');
+  if(pctCal < 50) riesgos.push('Cálculo por debajo del estándar para manejo de caja.');
+  if(flags.length) riesgos.push('Alertas de integridad: '+flags.join(' '));
+
+  // Fortalezas
+  const fortalezas = [];
+  if(extro >= 75) fortalezas.push('Excelente facilidad para iniciar conversación y romper el hielo con humor.');
+  if(amab  >= 75) fortalezas.push('Empatía marcada; genera confianza rápido en clientas de todo perfil.');
+  if(respo >= 75) fortalezas.push('Alto sentido de responsabilidad, especialmente en manejo de caja.');
+  if(estab >= 75) fortalezas.push('Estabilidad emocional frente a la presión y la corrección.');
+  if(resil >= 75) fortalezas.push('Resiliencia comercial: maneja objeciones de precio sin perder la venta.');
+  if(apert >= 75) fortalezas.push('Iniciativa y apertura al aprendizaje; ideal para crecer a encargada.');
+  if(pctMem >= 80) fortalezas.push('Memoria visual sobresaliente; útil para ubicación rápida de productos.');
+  if(pctCal >= 80) fortalezas.push('Cálculo rápido y preciso para caja.');
+
+  // Narrativa
+  const nombrePila = (S.registro.nombre||'').split(' ')[0] || 'La postulante';
+  let narrativa = `<b>${nombrePila}</b> obtiene un perfil conductual promedio de <b>${Math.round(prom)}/100</b>, `;
+  if(prom>=75) narrativa += `colocándose en el rango <b>ideal para atención directa al cliente</b> en tienda de accesorios. `;
+  else if(prom>=60) narrativa += `colocándose en un rango <b>prometedor</b> que amerita validación en entrevista presencial y prueba en tienda. `;
+  else if(prom>=45) narrativa += `en un rango <b>moderado</b>; se sugiere evaluar con atención las dimensiones más bajas antes de avanzar. `;
+  else narrativa += `en un rango <b>bajo</b>; probablemente no encaje con el perfil requerido para atención al público. `;
+
+  narrativa += `En comunicación y persuasión alcanza <b>${Math.round(pctCom)}%</b>, `;
+  narrativa += pctCom>=75 ? 'destacando su capacidad para generar cercanía y cerrar ventas. ' :
+               pctCom>=50 ? 'mostrando margen de mejora en el manejo de objeciones y clientes difíciles. ' :
+               'reflejando timidez o baja iniciativa para interactuar con el cliente. ';
+
+  narrativa += `En responsabilidad y caja obtiene <b>${Math.round(pctCal)}%</b> en cálculo y <b>${Math.round(pctPers)}%</b> en conducta ética. `;
+  narrativa += `La memoria visual (${Math.round(pctMem)}%) `;
+  narrativa += pctMem>=70 ? 'es un punto fuerte: retiene con facilidad productos, precios y ubicaciones. ' : 'sugiere reforzar técnicas de atención al detalle. ';
+
+  if(flags.length){
+    narrativa += `<br><br><b>⚠️ Alertas de integridad detectadas durante el test:</b> ` + flags.join(' ');
+  } else {
+    narrativa += `<br><br><b>✅ Sin alertas de integridad.</b> El test se completó en ${S.flags.tiempoTotal}s sin cambios de pestaña ni intentos de pegado.`;
+  }
+
+  narrativa += `<br><br><b>Recomendación de la auditoría:</b> `;
+  if(prom>=75 && flags.length===0) narrativa += `Avanzar a <b>entrevista presencial</b> y prueba en tienda de 2 horas. Alta probabilidad de encaje con el perfil SAFRI.`;
+  else if(prom>=60) narrativa += `Citar a entrevista y centrar la evaluación en las dimensiones más débiles detectadas. Considerar prueba en tienda supervisada.`;
+  else if(prom>=45) narrativa += `Mantener como reserva. Si no hay mejores candidatas, citar a entrevista y validar con casos prácticos.`;
+  else narrativa += `Descartar para atención al cliente. Podría considerarse para roles de inventario o logística sin trato directo.`;
+
+  return {
+    dimensiones:{
+      'Extroversión y carisma': Math.round(extro),
+      'Amabilidad y empatía': Math.round(amab),
+      'Responsabilidad y ética': Math.round(respo),
+      'Estabilidad emocional': Math.round(estab),
+      'Apertura e iniciativa': Math.round(apert),
+      'Resiliencia comercial': Math.round(resil)
+    },
+    promedio: Math.round(prom),
+    perfil, perfilColor,
+    fortalezas,
+    riesgos,
+    narrativa
+  };
 }
 
 function copiarCodigo(){
@@ -832,12 +856,13 @@ function vAdmin(){
     <h3 style="margin-top:22px">2) Postulantes guardados en este dispositivo (${lista.length})</h3>
     ${lista.length===0 ? '<p style="color:var(--muted);font-size:13px">Aún no hay registros locales.</p>' :
       `<table>
-        <tr><th>Fecha</th><th>Nombre</th><th>Modalidad</th><th>Pers.</th><th>Com.</th><th>Mem.</th><th>Caja</th><th>Alertas</th><th></th></tr>
+        <tr><th>Fecha</th><th>Nombre</th><th>Modalidad</th><th>Psico</th><th>Pers.</th><th>Com.</th><th>Mem.</th><th>Caja</th><th>Alertas</th><th></th></tr>
         ${lista.map((r,i)=>`
           <tr>
             <td>${new Date(r.fecha).toLocaleDateString()}</td>
             <td>${esc(r.nombre)}</td>
             <td>${esc(r.modalidad)}</td>
+            <td><b>${r.psicometrico?.promedio ?? '-'}</b></td>
             <td>${r.puntajes.personalidad}/${r.puntajes.maxPersonalidad}</td>
             <td>${r.puntajes.comunicacion ?? '-'}/${r.puntajes.maxComunicacion ?? '-'}</td>
             <td>${r.puntajes.memoria}/${r.puntajes.maxMemoria}</td>
@@ -849,14 +874,6 @@ function vAdmin(){
     <h3 style="margin-top:22px">3) Exportar todo (CSV)</h3>
     <button class="btn btn-ghost" onclick="exportCSV()">⬇️ Descargar CSV</button>
     <button class="btn btn-ghost" onclick="borrarTodo()">🗑️ Borrar registros locales</button>
-    <h3 style="margin-top:22px">Cómo detectar uso de IA</h3>
-    <ul style="font-size:13px;color:var(--muted);margin-left:18px;line-height:1.7">
-      <li><b>Tiempo total menor a 4 min:</b> sospechoso.</li>
-      <li><b>Cambios de pestaña > 2:</b> pudo buscar respuestas.</li>
-      <li><b>Intento de pegar texto:</b> bloqueado y registrado.</li>
-      <li><b>Preguntas abiertas sin datos personales</b> → genéricas.</li>
-      <li><b>Memoria alta + abiertas vacías:</b> contraste delator.</li>
-    </ul>
     <div id="detalleBox"></div>
   </div>`);
 }
@@ -880,12 +897,6 @@ function renderDetalle(r){
   const pctCom = r.puntajes.maxComunicacion ? Math.round(100 * r.puntajes.comunicacion / r.puntajes.maxComunicacion) : 0;
   const pctM = Math.round(100 * r.puntajes.memoria / r.puntajes.maxMemoria);
   const pctC = Math.round(100 * r.puntajes.calculo / r.puntajes.maxCalculo);
-  const prom = (pct + pctCom + pctM + pctC)/4;
-  let rec = '';
-  if(r.flags.length >= 2) rec = '<span class="chip bad">ALERTA — Revisar con cuidado / descartar</span>';
-  else if(prom >= 75 && r.flags.length===0) rec = '<span class="chip good">RECOMENDADO para entrevista</span>';
-  else if(prom >= 55) rec = '<span class="chip warn">REVISAR en entrevista</span>';
-  else rec = '<span class="chip bad">NO RECOMENDADO</span>';
 
   const pers = PREGUNTAS_PERSONALIDAD.map(q=>{
     const a = r.respuestas.personalidad[q.id];
@@ -898,14 +909,40 @@ function renderDetalle(r){
   const mem = PREGUNTAS_MEMORIA.map(q=>{
     const a = r.respuestas.memoria[q.id];
     return `<div class="qa"><div class="q">${esc(q.t)}</div><div class="a">→ ${a?esc(a.txt)+(a.correcta?' ✅':' ❌'):'Sin respuesta'}</div></div>`;
-  }).join('') + (r.respuestas.memoria.secuencia ? `<div class="qa"><div class="q">Secuencia</div><div class="a">→ ${esc(r.respuestas.memoria.secuencia.txt)} ${r.respuestas.memoria.secuencia.correcta?'✅':'❌'}</div></div>`:'');
-  const cal = PREGUNTAS_CALCULO.map(q=>{
+  }).join('');
+  const cal = PREGUNTAS_CALCULO.map((q,i)=>{
     const a = r.respuestas.calculo[q.id];
-    return `<div class="qa"><div class="q">${esc(q.t)}</div><div class="a">→ ${a?esc(a.txt)+(a.correcta?' ✅':' ❌'):'Sin respuesta'}</div></div>`;
+    const t = r.tiemposCalculo?.[i];
+    return `<div class="qa"><div class="q">${esc(q.t)}</div><div class="a">→ ${a?esc(a.txt)+(a.correcta?' ✅':' ❌'):'Sin respuesta'}${t?` (${t}s)`:''}</div></div>`;
   }).join('');
   const ab = PREGUNTAS_ABIERTAS.map(q=>{
     return `<div class="qa"><div class="q">${esc(q.t)}</div><div class="a">"${esc(r.respuestas.abiertas[q.id]||'')}"</div></div>`;
   }).join('');
+
+  // Bloque psicométrico
+  let psicoHTML = '';
+  if(r.psicometrico){
+    const p = r.psicometrico;
+    const dims = Object.entries(p.dimensiones).map(([k,v])=>{
+      const color = v>=75 ? 'linear-gradient(90deg,#10b981,#059669)' :
+                    v>=55 ? 'linear-gradient(90deg,#f59e0b,#d97706)' :
+                            'linear-gradient(90deg,#ef4444,#b91c1c)';
+      return `<div class="psy-dim"><label><span>${k}</span><b>${v}/100</b></label>
+        <div class="psy-bar"><div style="width:${v}%;background:${color}"></div></div></div>`;
+    }).join('');
+    psicoHTML = `
+      <div class="psy-box">
+        <h4>🤖 AUDITORÍA PSICOMÉTRICA (IA)</h4>
+        <p style="font-size:14px;margin-bottom:12px">
+          <span class="chip ${p.perfilColor}">${esc(p.perfil)}</span>
+          &nbsp;·&nbsp; Perfil conductual: <b>${p.promedio}/100</b>
+        </p>
+        ${dims}
+        ${p.fortalezas.length ? `<div style="margin-top:12px"><b style="color:#065f46;font-size:13px">✅ Fortalezas detectadas</b><ul style="margin-left:18px;font-size:13px;line-height:1.7;color:#374151">${p.fortalezas.map(f=>`<li>${esc(f)}</li>`).join('')}</ul></div>`:''}
+        ${p.riesgos.length ? `<div style="margin-top:10px"><b style="color:#991b1b;font-size:13px">⚠️ Riesgos detectados</b><ul style="margin-left:18px;font-size:13px;line-height:1.7;color:#374151">${p.riesgos.map(f=>`<li>${esc(f)}</li>`).join('')}</ul></div>`:''}
+        <div class="psy-narrative">${p.narrativa}</div>
+      </div>`;
+  }
 
   return `
   <div class="detail" style="margin-top:20px;border:2px solid var(--primary)">
@@ -921,17 +958,15 @@ function renderDetalle(r){
     <p style="font-size:13px">
       Personalidad: <b>${r.puntajes.personalidad}/${r.puntajes.maxPersonalidad}</b> (${pct}%)<br>
       Comunicación y persuasión: <b>${r.puntajes.comunicacion ?? '-'}/${r.puntajes.maxComunicacion ?? '-'}</b> (${pctCom}%)<br>
-      Memoria: <b>${r.puntajes.memoria}/${r.puntajes.maxMemoria}</b> (${pctM}%)<br>
+      Memoria visual: <b>${r.puntajes.memoria}/${r.puntajes.maxMemoria}</b> (${pctM}%)<br>
       Cálculo caja: <b>${r.puntajes.calculo}/${r.puntajes.maxCalculo}</b> (${pctC}%)<br>
-      Tiempo cálculo: <b>${r.tiempoCalculoUsado ?? '-'} s</b> de ${TIEMPO_CALCULO} s<br>
       Tiempo total: <b>${r.flagCount.tiempoTotal} s</b> · Cambios pestaña: <b>${r.flagCount.tab}</b> · Pegados: <b>${r.flagCount.paste}</b>
     </p>
-    <h4>Recomendación</h4>
-    <p>${rec}</p>
-    ${r.flags.length ? `<h4>⚠️ Alertas</h4><ul style="margin-left:18px;font-size:13px;color:#991b1b">${r.flags.map(f=>`<li>${esc(f)}</li>`).join('')}</ul>`:''}
+    ${psicoHTML}
+    ${r.flags.length ? `<h4>⚠️ Alertas de integridad</h4><ul style="margin-left:18px;font-size:13px;color:#991b1b">${r.flags.map(f=>`<li>${esc(f)}</li>`).join('')}</ul>`:''}
     <h4>Sección 1: Personalidad</h4>${pers}
     <h4>Sección 2: Comunicación y persuasión</h4>${com}
-    <h4>Sección 3: Memoria</h4>${mem}
+    <h4>Sección 3: Memoria visual</h4>${mem}
     <h4>Sección 4: Cálculo</h4>${cal}
     <h4>Sección 5: Preguntas abiertas</h4>${ab}
   </div>`;
@@ -940,14 +975,15 @@ function renderDetalle(r){
 function exportCSV(){
   const lista = JSON.parse(localStorage.getItem('postulantes_jm')||'[]');
   if(!lista.length){ alert('Sin registros.'); return; }
-  const head = ['Fecha','Nombre','DNI','Edad','Correo','Telefono','Grado','Distrito','Modalidad','Permanencia','Turno','Disponibilidad','Sueldo','PjePersonalidad','PjeComunicacion','PjeMemoria','PjeCalculo','TiempoCalculoSeg','TiempoSeg','CambiosPestana','Pegados','Flags'];
+  const head = ['Fecha','Nombre','DNI','Edad','Correo','Telefono','Grado','Distrito','Modalidad','Permanencia','Turno','Disponibilidad','Sueldo','PjePsicometrico','Perfil','PjePersonalidad','PjeComunicacion','PjeMemoria','PjeCalculo','TiempoSeg','CambiosPestana','Pegados','Flags'];
   const rows = lista.map(r=>[
     new Date(r.fecha).toLocaleString(), r.nombre, r.dni, r.edad, r.correo, r.telefono, r.grado, r.distrito,
     r.modalidad, r.permanencia, r.turno, r.disponibilidad, r.sueldo,
+    r.psicometrico?.promedio, r.psicometrico?.perfil,
     r.puntajes.personalidad, r.puntajes.comunicacion, r.puntajes.memoria, r.puntajes.calculo,
-    r.tiempoCalculoUsado, r.flagCount.tiempoTotal, r.flagCount.tab, r.flagCount.paste, r.flags.join(' | ')
+    r.flagCount.tiempoTotal, r.flagCount.tab, r.flagCount.paste, r.flags.join(' | ')
   ]);
-  const csv = [head, ...rows].map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const csv = [head, ...rows].map(r=>r.map(c=>`"${String(c??'').replace(/"/g,'""')}"`).join(',')).join('\n');
   const blob = new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
   a.download = 'postulantes_'+Date.now()+'.csv'; a.click();
