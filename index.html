@@ -55,6 +55,10 @@ textarea{resize:vertical;min-height:90px}
 .notice.info{background:#e0e7ff;border-color:var(--primary);color:#3730a3}
 .notice.danger{background:#fee2e2;border-color:var(--bad);color:#7f1d1d}
 .timer{font-size:34px;font-weight:700;color:var(--accent);text-align:center;margin:10px 0}
+.timer.warn{color:var(--bad);animation:pulse 0.8s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.timer-bar{height:8px;background:#e5e7eb;border-radius:99px;overflow:hidden;margin:8px 0 18px}
+.timer-bar > div{height:100%;background:linear-gradient(90deg,var(--accent),var(--bad));transition:width .3s linear}
 .prod-list{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
 .prod{background:#faf5ff;border:1px solid #e9d5ff;border-radius:10px;padding:12px;font-size:14px}
 .prod b{color:var(--primary-dark)}
@@ -80,7 +84,6 @@ tr:hover td{background:#faf5ff}
 .detail .qa{margin-bottom:8px}
 .detail .qa .q{font-weight:600;color:#374151}
 .detail .qa .a{color:var(--muted)}
-.hidden{display:none}
 </style>
 </head>
 <body>
@@ -97,10 +100,11 @@ tr:hover td{background:#faf5ff}
 
 <script>
 /* ============================================================
-   CONFIGURACIÓN — CAMBIA ESTOS VALORES
+   CONFIGURACIÓN
    ============================================================ */
-const ADMIN_PASSWORD = 'Tienda2024*';   // ← Cambia esta clave
-const TIEMPO_MINIMO_TEST = 240;         // seg. mínimos válidos
+const ADMIN_PASSWORD = 'Tienda2024*';   // ← CLAVE DEL ADMINISTRADOR
+const TIEMPO_MINIMO_TEST = 240;         // seg. mínimos válidos del test completo
+const TIEMPO_CALCULO = 50;              // ⏱️ segundos para toda la sección de cálculo
 
 /* ============================================================
    DATOS BASE
@@ -118,10 +122,7 @@ const DISTRITOS_LIMA = [
 const GRADOS = ["Secundaria completa","Técnica","Superior"];
 
 /* ============================================================
-   PREGUNTAS DE PERSONALIDAD
-   — TODAS las opciones están camufladas: ninguna es obviamente mala.
-   — Las "buenas" (p:2 o 3) son específicas y accionables.
-   — Las "malas" (p:-1 a -3) suenan razonables pero esconden un riesgo.
+   SECCIÓN 1: PERSONALIDAD Y ACTITUD
    ============================================================ */
 const PREGUNTAS_PERSONALIDAD = [
   { id:'p1', texto:'Cuando no hay clientes en la tienda, lo primero que haces es:',
@@ -211,8 +212,71 @@ const PREGUNTAS_PERSONALIDAD = [
 ];
 
 /* ============================================================
-   PRUEBA DE MEMORIA — SIMPLIFICADA
-   5 productos, 25 segundos (antes 8 productos, 20 segundos)
+   SECCIÓN 2: COMUNICACIÓN Y PERSUASIÓN
+   Perfil buscado: extrovertida, empática, capaz de romper el hielo
+   con humor apropiado y generar confianza para cerrar la venta.
+   ============================================================ */
+const PREGUNTAS_COMUNICACION = [
+  { id:'co1', texto:'Entra una clienta con cara de pocos amigos, sin mirar nada. ¿Cuál es tu primera reacción?',
+    opciones:[
+      {t:'La dejo tranquila; cuando quiera algo me llamará.', p:-1},
+      {t:'Le sonrío y le digo algo ligero: "Bienvenida, pase sin compromiso, aquí todo se ve bonito hasta sin querer comprar".', p:3},
+      {t:'Me acerco y le pregunto directamente qué busca, para no perder tiempo.', p:1},
+      {t:'Le comento el clima o algo casual para romper el hielo antes de ofrecerle algo.', p:2}
+    ]},
+  { id:'co2', texto:'Una clienta duda entre dos carteras y dice: "No sé, me gustan las dos pero solo puedo llevar una". ¿Qué le dices?',
+    opciones:[
+      {t:'"Piénselo con calma y me avisa" y la dejo decidir sola.', p:0},
+      {t:'Le digo cuál se ve mejor con el color de ropa que trae puesto y por qué le sacará más provecho.', p:3},
+      {t:'Le digo: "Lleve la más cara, dura más", y le explico la calidad.', p:-1},
+      {t:'Le propongo: "Mire, si se anima, la segunda se la dejo con un pequeño descuento para la próxima visita".', p:2}
+    ]},
+  { id:'co3', texto:'Un cliente varón entra a comprar un regalo para su esposa y no tiene idea qué elegir. Se le nota incómodo. ¿Qué haces?',
+    opciones:[
+      {t:'Le digo en broma: "Tranquilo, no es examen, solo es un regalo. La ayudamos a quedar como héroe".', p:3},
+      {t:'Le pregunto por el estilo de su esposa y le muestro 2 o 3 opciones que combinen.', p:3},
+      {t:'Le digo: "Cualquiera le va a gustar, todas son bonitas".', p:-1},
+      {t:'Le sugiero el producto más vendido y le explico por qué es un acierto seguro.', p:2}
+    ]},
+  { id:'co4', texto:'Una clienta te dice: "Está muy caro, en la tienda de la esquina lo vi más barato". ¿Cuál es la mejor respuesta?',
+    opciones:[
+      {t:'"Puede ser, pero le aseguro que la calidad no es la misma; esto le va a durar el doble".', p:2},
+      {t:'"Tiene razón, es un poco más, pero mire el detalle del cierre y el material; eso marca la diferencia".', p:3},
+      {t:'"Si quiere le puedo hacer un descuentito, pero no se lo diga a nadie".', p:-2},
+      {t:'"Bueno, si lo encuentra más barato, llévelo allá".', p:-3}
+    ]},
+  { id:'co5', texto:'Estás atendiendo a una clienta y entra otra apurada pidiendo algo rápido. ¿Qué haces?',
+    opciones:[
+      {t:'Le digo a la segunda: "Un momentito, en cuanto termine con ella la atiendo, no se me va".', p:3},
+      {t:'Dejo a la primera y atiendo a la segunda, porque se ve más apurada.', p:-2},
+      {t:'Les digo a las dos: "Ya las atiendo, por favor un momento", y trato de repartirme.', p:2},
+      {t:'Le pido a la primera que espere un momento y atiendo rápido a la segunda.', p:0}
+    ]},
+  { id:'co6', texto:'¿Cómo describirías tu estilo al atender a un cliente nuevo?',
+    opciones:[
+      {t:'Amable pero directa: le muestro lo que necesita y cierro la venta rápido.', p:0},
+      {t:'Cercana y conversadora: me gusta que se sienta cómoda, incluso me río con ellos si se da el momento.', p:3},
+      {t:'Respetuosa y tranquila: dejo que ellos tomen la iniciativa.', p:-1},
+      {t:'Con chispa y buena energía: una broma ligera siempre rompe el hielo.', p:2}
+    ]},
+  { id:'co7', texto:'Una clienta te cuenta un problema personal (su hija se casa, se peleó con su hermana, etc.) mientras compra. ¿Qué haces?',
+    opciones:[
+      {t:'La escucho con atención, le doy una respuesta cálida y sigo con la venta con naturalidad.', p:3},
+      {t:'Le doy mi opinión sincera sobre el problema, ya que me lo contó.', p:-1},
+      {t:'Cambio de tema rápido para no perder tiempo en la venta.', p:-2},
+      {t:'La escucho, empatizo breve y la traigo de vuelta al producto con suavidad.', p:3}
+    ]},
+  { id:'co8', texto:'Al cerrar la venta, ¿qué haces para que la clienta vuelva?',
+    opciones:[
+      {t:'Le agradezco y le digo: "Vuelva pronto, aquí siempre la atendemos con gusto".', p:2},
+      {t:'Le comento que pronto llegará mercadería nueva y le muestro una foto para que vuelva a ver.', p:3},
+      {t:'Le doy mi número o el de la tienda por si necesita algo.', p:2},
+      {t:'Nada especial, con que se vaya contenta basta.', p:0}
+    ]}
+];
+
+/* ============================================================
+   SECCIÓN 3: MEMORIA (5 productos · 25 s)
    ============================================================ */
 const PRODUCTOS_MEMORIA = [
   {n:'Cartera negra',    p:89},
@@ -231,7 +295,7 @@ const PREGUNTAS_MEMORIA = [
 const SECUENCIA_MEMORIA = '4 7 2 9 1';
 
 /* ============================================================
-   PRUEBA DE CÁLCULO
+   SECCIÓN 4: CÁLCULO (8 preguntas · 50 s totales)
    ============================================================ */
 const PREGUNTAS_CALCULO = [
   {id:'c1', t:'Un cliente compra: cartera S/ 89 + aretes S/ 25 + blusa S/ 45. Paga con S/ 200. ¿Cuál es el vuelto?',
@@ -253,7 +317,7 @@ const PREGUNTAS_CALCULO = [
 ];
 
 /* ============================================================
-   PREGUNTAS ABIERTAS (anti-IA)
+   SECCIÓN 5: PREGUNTAS ABIERTAS (anti-IA)
    ============================================================ */
 const PREGUNTAS_ABIERTAS = [
   {id:'a1', t:'Describe brevemente tu último trabajo o, si nunca has trabajado, una situación en la que asumiste una responsabilidad (casa, estudios, voluntariado). Incluye: la inicial del nombre de una persona involucrada y el mes aproximado.',
@@ -277,8 +341,8 @@ function encodeRes(o){return btoa(unescape(encodeURIComponent(JSON.stringify(o))
 function decodeRes(c){try{return JSON.parse(decodeURIComponent(escape(atob(c.trim()))));}catch(e){return null;}}
 
 let S = {
-  registro:{}, respuestas:{personalidad:{},memoria:{},calculo:{},abiertas:{}},
-  orden:{}, flags:{tab:0,paste:0,inicio:null,fin:null}, paso:0
+  registro:{}, respuestas:{personalidad:{},comunicacion:{},memoria:{},calculo:{},abiertas:{}},
+  orden:{}, flags:{tab:0,paste:0,inicio:null,fin:null}, timers:{}
 };
 
 /* ============================================================
@@ -364,6 +428,7 @@ function guardarRegistro(e){
     if(!confirm('Tienes menos de 18 años y elegiste Full time. ¿Deseas continuar?')) return false;
   }
   PREGUNTAS_PERSONALIDAD.forEach(q=>{ S.orden[q.id] = shuffle(q.opciones.map((o,i)=>({...o, orig:i}))); });
+  PREGUNTAS_COMUNICACION.forEach(q=>{ S.orden[q.id] = shuffle(q.opciones.map((o,i)=>({...o, orig:i}))); });
   PREGUNTAS_MEMORIA.forEach(q=>{ S.orden[q.id] = shuffle(q.ops.map((o,i)=>({o, i}))); });
   PREGUNTAS_CALCULO.forEach(q=>{ S.orden[q.id] = shuffle(q.ops.map((o,i)=>({o, i}))); });
   S.flags.inicio = Date.now();
@@ -379,11 +444,12 @@ function vIntroTest(){
   <div class="card">
     <h2>📝 Test de selección</h2>
     <div class="notice danger">
-      <b>Lee con atención:</b> este test tiene 4 secciones:
+      <b>Lee con atención:</b> este test tiene 5 secciones:
       <ol style="margin:8px 0 0 18px">
         <li>Personalidad y actitud (12 preguntas)</li>
+        <li>Comunicación y persuasión con el cliente (8 preguntas)</li>
         <li>Prueba de memoria (con tiempo limitado)</li>
-        <li>Prueba de cálculo para caja</li>
+        <li>Prueba de cálculo para caja (⏱️ 50 segundos para TODA la sección)</li>
         <li>Preguntas abiertas (respuestas personales)</li>
       </ol>
     </div>
@@ -400,7 +466,7 @@ function vIntroTest(){
    SECCIÓN 1: PERSONALIDAD
    ============================================================ */
 function vPersonalidad(i){
-  if(i >= PREGUNTAS_PERSONALIDAD.length){ return vMemoria1(); }
+  if(i >= PREGUNTAS_PERSONALIDAD.length){ return vComunicacion(0); }
   const q = PREGUNTAS_PERSONALIDAD[i];
   const ops = S.orden[q.id];
   const total = PREGUNTAS_PERSONALIDAD.length;
@@ -408,7 +474,7 @@ function vPersonalidad(i){
   render(`
   <div class="card">
     <div class="progress"><div style="width:${prog}%"></div></div>
-    <p style="font-size:12px;color:var(--muted);margin-bottom:8px">Pregunta ${i+1} de ${total} · Sección 1</p>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:8px">Pregunta ${i+1} de ${total} · Sección 1 — Personalidad</p>
     <h2>${esc(q.texto)}</h2>
     <div id="ops">
       ${ops.map((o,k)=>`
@@ -427,7 +493,37 @@ function vPersonalidad(i){
 }
 
 /* ============================================================
-   SECCIÓN 2: MEMORIA
+   SECCIÓN 2: COMUNICACIÓN Y PERSUASIÓN
+   ============================================================ */
+function vComunicacion(i){
+  if(i >= PREGUNTAS_COMUNICACION.length){ return vMemoria1(); }
+  const q = PREGUNTAS_COMUNICACION[i];
+  const ops = S.orden[q.id];
+  const total = PREGUNTAS_COMUNICACION.length;
+  const prog = (i/total)*100;
+  render(`
+  <div class="card">
+    <div class="progress"><div style="width:${prog}%"></div></div>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:8px">Pregunta ${i+1} de ${total} · Sección 2 — Comunicación</p>
+    <h2>${esc(q.texto)}</h2>
+    <div id="opsC">
+      ${ops.map((o,k)=>`
+        <label class="opt" onclick="selCom('${q.id}',${k},'${esc(o.t).replace(/'/g,"\\'")}',${o.p})">
+          ${esc(o.t)}
+        </label>`).join('')}
+    </div>
+    <button class="btn" id="btnCom" disabled onclick="vComunicacion(${i+1})">Siguiente →</button>
+  </div>`);
+  window.selCom = function(qid, k, txt, p){
+    S.respuestas.comunicacion[qid] = {txt, p};
+    document.querySelectorAll('#opsC .opt').forEach(el=>el.classList.remove('sel'));
+    document.querySelectorAll('#opsC .opt')[k].classList.add('sel');
+    $('btnCom').disabled = false;
+  };
+}
+
+/* ============================================================
+   SECCIÓN 3: MEMORIA
    ============================================================ */
 function vMemoria1(){
   render(`
@@ -507,45 +603,101 @@ function guardarSeq(){
 }
 
 /* ============================================================
-   SECCIÓN 3: CÁLCULO
+   SECCIÓN 4: CÁLCULO CON TEMPORIZADOR DE 50 SEGUNDOS
    ============================================================ */
 function vCalculo(i){
-  if(i >= PREGUNTAS_CALCULO.length){ return vAbiertas(); }
+  // Si ya terminó todas las preguntas → guardar y continuar
+  if(i >= PREGUNTAS_CALCULO.length){
+    detenerTimerCalculo();
+    return vAbiertas();
+  }
+  // Si es la primera vez, iniciar el temporizador
+  if(i === 0 && !S.timers.calculoIniciado){
+    S.timers.calculoIniciado = true;
+    S.timers.calculoRestante = TIEMPO_CALCULO;
+    S.timers.calculoInicio = Date.now();
+  }
+
   const q = PREGUNTAS_CALCULO[i];
   const ops = S.orden[q.id];
   const total = PREGUNTAS_CALCULO.length;
   const prog = (i/total)*100;
+  const restante = S.timers.calculoRestante;
+
   render(`
   <div class="card">
     <div class="progress"><div style="width:${prog}%"></div></div>
-    <p style="font-size:12px;color:var(--muted);margin-bottom:8px">Pregunta ${i+1} de ${total} · Sección 3 (Caja)</p>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+      <p style="font-size:12px;color:var(--muted)">Pregunta ${i+1} de ${total} · Sección 4 — Caja</p>
+      <p style="font-size:13px;font-weight:700;color:${restante<=15?'var(--bad)':'var(--accent)'}">⏱️ <span id="tmrCalc">${restante}</span> s</p>
+    </div>
+    <div class="timer-bar"><div id="barCalc" style="width:${(restante/TIEMPO_CALCULO)*100}%"></div></div>
     <h2>${esc(q.t)}</h2>
-    <div id="opsC">
+    <div id="opsCal">
       ${ops.map((o,k)=>`
         <label class="opt" onclick="selCal('${q.id}',${k},'${esc(o.o)}',${o.i})">
           ${esc(o.o)}
         </label>`).join('')}
     </div>
-    <button class="btn" id="btnC" disabled onclick="vCalculo(${i+1})">Siguiente →</button>
+    <button class="btn" id="btnCal" disabled onclick="vCalculo(${i+1})">Siguiente →</button>
   </div>`);
+
+  // Si ya hay una respuesta guardada de esta pregunta (por recarga), marcar
+  if(S.respuestas.calculo[q.id]){
+    const idx = ops.findIndex(o=>o.i === S.respuestas.calculo[q.id].origIdx);
+    if(idx >= 0){
+      document.querySelectorAll('#opsCal .opt')[idx].classList.add('sel');
+      $('btnCal').disabled = false;
+    }
+  }
+
   window.selCal = function(qid,k,txt,origIdx){
     S.respuestas.calculo[qid] = {txt, origIdx, correcta: PREGUNTAS_CALCULO.find(p=>p.id===qid).ok === origIdx};
-    document.querySelectorAll('#opsC .opt').forEach(el=>el.classList.remove('sel'));
-    document.querySelectorAll('#opsC .opt')[k].classList.add('sel');
-    $('btnC').disabled = false;
+    document.querySelectorAll('#opsCal .opt').forEach(el=>el.classList.remove('sel'));
+    document.querySelectorAll('#opsCal .opt')[k].classList.add('sel');
+    $('btnCal').disabled = false;
   };
+
+  iniciarTimerCalculo();
+}
+
+function iniciarTimerCalculo(){
+  detenerTimerCalculo();
+  S.timers.calculoInterval = setInterval(()=>{
+    S.timers.calculoRestante--;
+    const t = S.timers.calculoRestante;
+    const el = $('tmrCalc'), bar = $('barCalc');
+    if(el){ el.textContent = t; el.style.color = t<=15 ? 'var(--bad)' : 'var(--accent)'; }
+    if(bar){ bar.style.width = (Math.max(t,0)/TIEMPO_CALCULO*100)+'%'; }
+    if(t <= 0){
+      detenerTimerCalculo();
+      // Tiempo agotado: se registran como incorrectas las no respondidas
+      PREGUNTAS_CALCULO.forEach(q=>{
+        if(!S.respuestas.calculo[q.id]){
+          S.respuestas.calculo[q.id] = {txt:'(sin responder)', origIdx:-1, correcta:false};
+        }
+      });
+      alert('⏱️ ¡Tiempo agotado! Pasamos a la siguiente sección.');
+      vAbiertas();
+    }
+  },1000);
+}
+
+function detenerTimerCalculo(){
+  if(S.timers.calculoInterval){ clearInterval(S.timers.calculoInterval); S.timers.calculoInterval = null; }
 }
 
 /* ============================================================
-   SECCIÓN 4: PREGUNTAS ABIERTAS
+   SECCIÓN 5: PREGUNTAS ABIERTAS
    ============================================================ */
 function vAbiertas(){
+  detenerTimerCalculo();
   render(`
   <div class="card">
     <h2>✍️ Preguntas abiertas</h2>
     <div class="notice danger">
       <b>Importante:</b> responde con tus propias palabras. No copies de internet ni de IA.
-      El sistema detecta cambios de pestaña y copiado/pegado. Respuestas genéricas serán penalizadas.
+      El sistema detecta cambios de pestaña y copiado/pegado.
     </div>
     ${PREGUNTAS_ABIERTAS.map((q,i)=>`
       <div class="field">
@@ -574,6 +726,7 @@ function marcarPaste(e){
    FINALIZAR
    ============================================================ */
 function finalizarTest(){
+  detenerTimerCalculo();
   const tas = document.querySelectorAll('textarea[data-qid]');
   for(const t of tas){
     if(t.value.trim().length < 15){ alert('Por favor responde todas las preguntas abiertas con al menos una frase.'); t.focus(); return; }
@@ -581,25 +734,38 @@ function finalizarTest(){
   }
   S.flags.fin = Date.now();
   S.flags.tiempoTotal = Math.round((S.flags.fin - S.flags.inicio)/1000);
+  const tiempoCalculoUsado = TIEMPO_CALCULO - S.timers.calculoRestante;
 
+  // Puntajes
   let pPers = 0, maxPers = 0;
   PREGUNTAS_PERSONALIDAD.forEach(q=>{ pPers += S.respuestas.personalidad[q.id]?.p ?? 0; maxPers += 3; });
+  let pCom = 0, maxCom = 0;
+  PREGUNTAS_COMUNICACION.forEach(q=>{ pCom += S.respuestas.comunicacion[q.id]?.p ?? 0; maxCom += 3; });
   let pMem = 0;
   Object.values(S.respuestas.memoria).forEach(m=>{ if(m.correcta) pMem++; });
   let pCal = 0;
   Object.values(S.respuestas.calculo).forEach(c=>{ if(c.correcta) pCal++; });
 
+  // Flags
   const flags = [];
   if(S.flags.tiempoTotal < TIEMPO_MINIMO_TEST) flags.push('Tiempo total muy bajo ('+S.flags.tiempoTotal+'s) — posible uso de IA o respuestas al azar.');
   if(S.flags.tab > 2) flags.push('Cambios de pestaña detectados ('+S.flags.tab+') — posible búsqueda externa.');
   if(S.flags.paste > 0) flags.push('Intento(s) de pegar texto ('+S.flags.paste+') — posible uso de IA.');
   if(S.registro.modalidad === 'Full time' && S.registro.permanencia === '3 meses')
     flags.push('Coherencia: eligió Full time pero permanencia de solo 3 meses.');
+  if(tiempoCalculoUsado < 15 && pCal >= 6)
+    flags.push('Cálculo resuelto en tiempo récord ('+tiempoCalculoUsado+'s para 8 preguntas) — verificar en entrevista.');
 
   const resultado = {
     ...S.registro,
     fecha: new Date().toISOString(),
-    puntajes: { personalidad:pPers, maxPersonalidad:maxPers, memoria:pMem, maxMemoria:PREGUNTAS_MEMORIA.length+1, calculo:pCal, maxCalculo:PREGUNTAS_CALCULO.length },
+    puntajes: {
+      personalidad:pPers, maxPersonalidad:maxPers,
+      comunicacion:pCom, maxComunicacion:maxCom,
+      memoria:pMem, maxMemoria:PREGUNTAS_MEMORIA.length+1,
+      calculo:pCal, maxCalculo:PREGUNTAS_CALCULO.length
+    },
+    tiempoCalculoUsado,
     respuestas: S.respuestas,
     flags,
     flagCount: {tab:S.flags.tab, paste:S.flags.paste, tiempoTotal:S.flags.tiempoTotal},
@@ -666,13 +832,14 @@ function vAdmin(){
     <h3 style="margin-top:22px">2) Postulantes guardados en este dispositivo (${lista.length})</h3>
     ${lista.length===0 ? '<p style="color:var(--muted);font-size:13px">Aún no hay registros locales.</p>' :
       `<table>
-        <tr><th>Fecha</th><th>Nombre</th><th>Modalidad</th><th>Pers.</th><th>Mem.</th><th>Caja</th><th>Alertas</th><th></th></tr>
+        <tr><th>Fecha</th><th>Nombre</th><th>Modalidad</th><th>Pers.</th><th>Com.</th><th>Mem.</th><th>Caja</th><th>Alertas</th><th></th></tr>
         ${lista.map((r,i)=>`
           <tr>
             <td>${new Date(r.fecha).toLocaleDateString()}</td>
             <td>${esc(r.nombre)}</td>
             <td>${esc(r.modalidad)}</td>
             <td>${r.puntajes.personalidad}/${r.puntajes.maxPersonalidad}</td>
+            <td>${r.puntajes.comunicacion ?? '-'}/${r.puntajes.maxComunicacion ?? '-'}</td>
             <td>${r.puntajes.memoria}/${r.puntajes.maxMemoria}</td>
             <td>${r.puntajes.calculo}/${r.puntajes.maxCalculo}</td>
             <td>${r.flags.length ? `<span class="tag p">${r.flags.length}</span>` : '<span class="tag g">0</span>'}</td>
@@ -687,8 +854,8 @@ function vAdmin(){
       <li><b>Tiempo total menor a 4 min:</b> sospechoso.</li>
       <li><b>Cambios de pestaña > 2:</b> pudo buscar respuestas.</li>
       <li><b>Intento de pegar texto:</b> bloqueado y registrado.</li>
-      <li><b>Preguntas abiertas sin datos personales</b> (iniciales, meses, línea de bus) → genéricas.</li>
-      <li><b>Memoria alta + abiertas vacías:</b> la memoria no se puede consultar en IA; el contraste delata.</li>
+      <li><b>Preguntas abiertas sin datos personales</b> → genéricas.</li>
+      <li><b>Memoria alta + abiertas vacías:</b> contraste delator.</li>
     </ul>
     <div id="detalleBox"></div>
   </div>`);
@@ -710,9 +877,10 @@ function verDetalle(i){
 
 function renderDetalle(r){
   const pct = Math.round(100 * r.puntajes.personalidad / r.puntajes.maxPersonalidad);
+  const pctCom = r.puntajes.maxComunicacion ? Math.round(100 * r.puntajes.comunicacion / r.puntajes.maxComunicacion) : 0;
   const pctM = Math.round(100 * r.puntajes.memoria / r.puntajes.maxMemoria);
   const pctC = Math.round(100 * r.puntajes.calculo / r.puntajes.maxCalculo);
-  const prom = (pct + pctM + pctC)/3;
+  const prom = (pct + pctCom + pctM + pctC)/4;
   let rec = '';
   if(r.flags.length >= 2) rec = '<span class="chip bad">ALERTA — Revisar con cuidado / descartar</span>';
   else if(prom >= 75 && r.flags.length===0) rec = '<span class="chip good">RECOMENDADO para entrevista</span>';
@@ -721,6 +889,10 @@ function renderDetalle(r){
 
   const pers = PREGUNTAS_PERSONALIDAD.map(q=>{
     const a = r.respuestas.personalidad[q.id];
+    return `<div class="qa"><div class="q">${esc(q.texto)}</div><div class="a">→ ${a?esc(a.txt)+' ('+a.p+' pts)':'Sin respuesta'}</div></div>`;
+  }).join('');
+  const com = PREGUNTAS_COMUNICACION.map(q=>{
+    const a = r.respuestas.comunicacion?.[q.id];
     return `<div class="qa"><div class="q">${esc(q.texto)}</div><div class="a">→ ${a?esc(a.txt)+' ('+a.p+' pts)':'Sin respuesta'}</div></div>`;
   }).join('');
   const mem = PREGUNTAS_MEMORIA.map(q=>{
@@ -748,29 +920,32 @@ function renderDetalle(r){
     <h4>Puntajes</h4>
     <p style="font-size:13px">
       Personalidad: <b>${r.puntajes.personalidad}/${r.puntajes.maxPersonalidad}</b> (${pct}%)<br>
+      Comunicación y persuasión: <b>${r.puntajes.comunicacion ?? '-'}/${r.puntajes.maxComunicacion ?? '-'}</b> (${pctCom}%)<br>
       Memoria: <b>${r.puntajes.memoria}/${r.puntajes.maxMemoria}</b> (${pctM}%)<br>
       Cálculo caja: <b>${r.puntajes.calculo}/${r.puntajes.maxCalculo}</b> (${pctC}%)<br>
+      Tiempo cálculo: <b>${r.tiempoCalculoUsado ?? '-'} s</b> de ${TIEMPO_CALCULO} s<br>
       Tiempo total: <b>${r.flagCount.tiempoTotal} s</b> · Cambios pestaña: <b>${r.flagCount.tab}</b> · Pegados: <b>${r.flagCount.paste}</b>
     </p>
     <h4>Recomendación</h4>
     <p>${rec}</p>
     ${r.flags.length ? `<h4>⚠️ Alertas</h4><ul style="margin-left:18px;font-size:13px;color:#991b1b">${r.flags.map(f=>`<li>${esc(f)}</li>`).join('')}</ul>`:''}
     <h4>Sección 1: Personalidad</h4>${pers}
-    <h4>Sección 2: Memoria</h4>${mem}
-    <h4>Sección 3: Cálculo</h4>${cal}
-    <h4>Sección 4: Preguntas abiertas</h4>${ab}
+    <h4>Sección 2: Comunicación y persuasión</h4>${com}
+    <h4>Sección 3: Memoria</h4>${mem}
+    <h4>Sección 4: Cálculo</h4>${cal}
+    <h4>Sección 5: Preguntas abiertas</h4>${ab}
   </div>`;
 }
 
 function exportCSV(){
   const lista = JSON.parse(localStorage.getItem('postulantes_jm')||'[]');
   if(!lista.length){ alert('Sin registros.'); return; }
-  const head = ['Fecha','Nombre','DNI','Edad','Correo','Telefono','Grado','Distrito','Modalidad','Permanencia','Turno','Disponibilidad','Sueldo','PjePersonalidad','PjeMemoria','PjeCalculo','TiempoSeg','CambiosPestana','Pegados','Flags'];
+  const head = ['Fecha','Nombre','DNI','Edad','Correo','Telefono','Grado','Distrito','Modalidad','Permanencia','Turno','Disponibilidad','Sueldo','PjePersonalidad','PjeComunicacion','PjeMemoria','PjeCalculo','TiempoCalculoSeg','TiempoSeg','CambiosPestana','Pegados','Flags'];
   const rows = lista.map(r=>[
     new Date(r.fecha).toLocaleString(), r.nombre, r.dni, r.edad, r.correo, r.telefono, r.grado, r.distrito,
     r.modalidad, r.permanencia, r.turno, r.disponibilidad, r.sueldo,
-    r.puntajes.personalidad, r.puntajes.memoria, r.puntajes.calculo,
-    r.flagCount.tiempoTotal, r.flagCount.tab, r.flagCount.paste, r.flags.join(' | ')
+    r.puntajes.personalidad, r.puntajes.comunicacion, r.puntajes.memoria, r.puntajes.calculo,
+    r.tiempoCalculoUsado, r.flagCount.tiempoTotal, r.flagCount.tab, r.flagCount.paste, r.flags.join(' | ')
   ]);
   const csv = [head, ...rows].map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
   const blob = new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});
