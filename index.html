@@ -5,41 +5,34 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Evaluación Postulantes SAFRI</title>
 <style>
-:root{
-  --primary:#7c3aed; --primary-dark:#5b21b6; --accent:#ec4899;
-  --bg:#f8f7fb; --card:#fff; --text:#1f2937; --muted:#6b7280;
-  --border:#e5e7eb; --good:#10b981; --warn:#f59e0b; --bad:#ef4444;
-}
+:root{--primary:#7c3aed;--primary-dark:#5b21b6;--accent:#ec4899;--bg:#f8f7fb;--card:#fff;--text:#1f2937;--muted:#6b7280;--border:#e5e7eb;--good:#10b981;--warn:#f59e0b;--bad:#ef4444;--wa:#25d366;}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-  background:linear-gradient(135deg,#f8f7fb,#f3e8ff);color:var(--text);
-  min-height:100vh;line-height:1.5;padding:16px}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:linear-gradient(135deg,#f8f7fb,#f3e8ff);color:var(--text);min-height:100vh;line-height:1.5;padding:16px}
 .wrap{max-width:760px;margin:0 auto}
 .header{text-align:center;padding:20px 10px 28px}
 .header h1{font-size:22px;color:var(--primary-dark);margin-bottom:6px}
 .header p{color:var(--muted);font-size:14px}
-.card{background:var(--card);border-radius:16px;padding:26px;
-  box-shadow:0 4px 24px rgba(124,58,237,.08);margin-bottom:18px}
+.card{background:var(--card);border-radius:16px;padding:26px;box-shadow:0 4px 24px rgba(124,58,237,.08);margin-bottom:18px}
 h2{font-size:18px;color:var(--primary-dark);margin-bottom:14px}
 h3{font-size:15px;color:var(--primary-dark);margin:16px 0 8px}
 label{display:block;font-size:13px;font-weight:600;margin-bottom:6px;color:#374151}
-input,select,textarea{width:100%;padding:11px 13px;border:1.5px solid var(--border);
-  border-radius:10px;font-size:14px;font-family:inherit;background:#fff;transition:.15s;color:var(--text)}
-input:focus,select:focus,textarea:focus{outline:none;border-color:var(--primary);
-  box-shadow:0 0 0 3px rgba(124,58,237,.12)}
+input,select,textarea{width:100%;padding:11px 13px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:inherit;background:#fff;transition:.15s;color:var(--text)}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(124,58,237,.12)}
 textarea{resize:vertical;min-height:90px}
 .field{margin-bottom:15px}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 @media(max-width:560px){.row{grid-template-columns:1fr}}
-.btn{display:inline-block;padding:13px 26px;border:none;border-radius:10px;
-  font-size:15px;font-weight:600;cursor:pointer;transition:.15s;background:var(--primary);color:#fff}
+.btn{display:inline-block;padding:13px 26px;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;transition:.15s;background:var(--primary);color:#fff;text-align:center;text-decoration:none}
 .btn:hover{background:var(--primary-dark);transform:translateY(-1px)}
 .btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
 .btn-ghost{background:#fff;color:var(--primary);border:1.5px solid var(--primary)}
 .btn-ghost:hover{background:#f3e8ff}
 .btn-full{width:100%}
-.opt{display:block;padding:14px 16px;border:1.5px solid var(--border);
-  border-radius:10px;margin-bottom:10px;cursor:pointer;font-size:14px;transition:.15s;background:#fff}
+.btn-wa{background:var(--wa);font-size:17px;padding:18px 26px;box-shadow:0 6px 20px rgba(37,211,102,.35)}
+.btn-wa:hover{background:#1ebe5d;box-shadow:0 8px 24px rgba(37,211,102,.45)}
+.btn-mail{background:#ea4335;color:#fff;border:none}
+.btn-mail:hover{background:#c5221f}
+.opt{display:block;padding:14px 16px;border:1.5px solid var(--border);border-radius:10px;margin-bottom:10px;cursor:pointer;font-size:14px;transition:.15s;background:#fff}
 .opt:hover{border-color:var(--primary);background:#faf5ff}
 .opt.sel{border-color:var(--primary);background:#f3e8ff;font-weight:600}
 .opt input{display:none}
@@ -49,9 +42,7 @@ textarea{resize:vertical;min-height:90px}
 .chip.good{background:#d1fae5;color:#065f46}
 .chip.warn{background:#fef3c7;color:#92400e}
 .chip.bad{background:#fee2e2;color:#991b1b}
-.chip.info{background:#e0e7ff;color:#3730a3}
-.notice{background:#fef3c7;border-left:4px solid var(--warn);padding:12px 14px;
-  border-radius:8px;font-size:13px;margin-bottom:16px;color:#78350f}
+.notice{background:#fef3c7;border-left:4px solid var(--warn);padding:12px 14px;border-radius:8px;font-size:13px;margin-bottom:16px;color:#78350f}
 .notice.info{background:#e0e7ff;border-color:var(--primary);color:#3730a3}
 .notice.danger{background:#fee2e2;border-color:var(--bad);color:#7f1d1d}
 .notice.success{background:#d1fae5;border-color:var(--good);color:#065f46}
@@ -60,15 +51,12 @@ textarea{resize:vertical;min-height:90px}
 .timer-bar > div{height:100%;background:linear-gradient(90deg,var(--accent),var(--bad));transition:width .3s linear}
 .mem-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}
 @media(max-width:560px){.mem-grid{grid-template-columns:1fr 1fr}}
-.mem-card{background:linear-gradient(135deg,#fef3f8,#faf5ff);border:2px solid #f3e8ff;
-  border-radius:16px;padding:18px 12px;text-align:center;box-shadow:0 2px 8px rgba(236,72,153,.08)}
+.mem-card{background:linear-gradient(135deg,#fef3f8,#faf5ff);border:2px solid #f3e8ff;border-radius:16px;padding:18px 12px;text-align:center;box-shadow:0 2px 8px rgba(236,72,153,.08)}
 .mem-card .emoji{font-size:52px;line-height:1;display:block;margin-bottom:8px}
 .mem-card .nom{font-size:12px;color:var(--muted);margin-bottom:6px;font-weight:600;text-transform:uppercase;letter-spacing:.3px}
 .mem-card .precio{font-size:22px;font-weight:800;color:var(--primary-dark)}
 .counter{font-size:12px;color:var(--muted);text-align:right;margin-top:4px}
-.result-box{text-align:center;padding:26px;background:#f3e8ff;border-radius:14px;margin:14px 0}
-.code-box{background:#1f2937;color:#a7f3d0;padding:14px;border-radius:10px;
-  font-family:monospace;font-size:12px;word-break:break-all;max-height:180px;overflow:auto;margin:10px 0}
+.code-box{background:#1f2937;color:#a7f3d0;padding:14px;border-radius:10px;font-family:monospace;font-size:11px;word-break:break-all;max-height:140px;overflow:auto;margin:10px 0}
 table{width:100%;border-collapse:collapse;font-size:13px}
 th,td{padding:9px 8px;text-align:left;border-bottom:1px solid var(--border)}
 th{background:#f9fafb;font-weight:600;color:#374151;font-size:12px;text-transform:uppercase}
@@ -78,15 +66,13 @@ tr:hover td{background:#faf5ff}
 .admin-link a:hover{color:var(--primary)}
 .tag{display:inline-block;padding:2px 8px;border-radius:99px;font-size:11px;font-weight:700;margin-right:4px}
 .tag.p{background:#fee2e2;color:#991b1b}
-.tag.n{background:#fef3c7;color:#92400e}
 .tag.g{background:#d1fae5;color:#065f46}
 .detail{background:#f9fafb;border-radius:10px;padding:14px;margin:10px 0;font-size:13px}
 .detail h4{font-size:13px;color:var(--primary-dark);margin:10px 0 6px}
 .detail .qa{margin-bottom:8px}
 .detail .qa .q{font-weight:600;color:#374151}
 .detail .qa .a{color:var(--muted)}
-.psy-box{background:linear-gradient(135deg,#faf5ff,#fce7f3);border:2px solid var(--primary);
-  border-radius:14px;padding:18px;margin:14px 0}
+.psy-box{background:linear-gradient(135deg,#faf5ff,#fce7f3);border:2px solid var(--primary);border-radius:14px;padding:18px;margin:14px 0}
 .psy-box h4{font-size:14px;color:var(--primary-dark);margin-bottom:8px;letter-spacing:.5px}
 .psy-dim{margin-bottom:10px}
 .psy-dim label{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;color:#374151}
@@ -101,6 +87,8 @@ tr:hover td{background:#faf5ff}
 .ctx-card .lbl{color:var(--muted);text-transform:uppercase;font-size:10px;font-weight:700;letter-spacing:.4px}
 .ctx-card .val{font-size:16px;font-weight:800;color:var(--primary-dark);margin:4px 0}
 .ctx-card .det{color:var(--muted);font-size:11px}
+@keyframes pop{0%{transform:scale(0);opacity:0}60%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
+.success-icon{font-size:76px;line-height:1;display:inline-block;animation:pop .5s cubic-bezier(.5,1.8,.5,1);margin-bottom:6px}
 </style>
 </head>
 <body>
@@ -114,173 +102,115 @@ tr:hover td{background:#faf5ff}
     <a onclick="pedirAdmin()">Acceso administrador</a>
   </div>
 </div>
-
 <script>
 /* ============================================================
-   CONFIGURACIÓN
+   CONFIGURACIÓN — CAMBIA ESTOS VALORES
    ============================================================ */
 const ADMIN_PASSWORD = 'Tienda2024*';
+const STORE_WHATSAPP = '51985659774';       // ← TU WhatsApp (código 51 + número)
+const STORE_EMAIL    = 'gmobilejm@gmail.com'; // ← TU correo
 const TIEMPO_MINIMO_TEST = 180;
-const TIEMPO_POR_CALCULO = 50;
+const TIEMPO_POR_CALCULO = 30;
 const EDAD_MINIMA = 20;
 
-/* ============================================================
-   TABLA DE PROXIMIDAD A JESÚS MARÍA (100 = más cerca)
-   ============================================================ */
 const PROXIMIDAD = {
-  'Jesús María':100,'Lince':92,'San Isidro':88,'Magdalena del Mar':85,
-  'Pueblo Libre':82,'Breña':80,'San Miguel':78,'Surquillo':76,
-  'Lima (Cercado)':75,'Miraflores':70,'San Borja':68,'La Victoria':65,
-  'Rímac':62,'Santiago de Surco':60,'Independencia':58,'Barranco':55,
-  'San Martín de Porres':52,'San Luis':52,'San Juan de Miraflores':48,
-  'El Agustino':48,'Los Olivos':45,'Chorrillos':45,'Carmen de la Legua':45,
-  'Bellavista':42,'La Perla':42,'La Molina':42,'San Juan de Lurigancho':40,
-  'Santa Anita':40,'Callao (Cercado)':40,'Villa María del Triunfo':38,
-  'La Punta':38,'Villa El Salvador':35,'Ate':35,'Comas':30,
-  'Carabayllo':25,'Puente Piedra':25,'Mi Perú':25,'Ventanilla':22,
-  'Santa Rosa':20,'Chaclacayo':20,'Cieneguilla':20,'Lurigancho-Chosica':18,
-  'Ancón':15,'Pachacámac':15,'Lurín':12,'Punta Hermosa':10,
-  'Punta Negra':10,'San Bartolo':8,'Santa María del Mar':8,'Pucusana':5
+  'Jesús María':100,'Lince':92,'San Isidro':88,'Magdalena del Mar':85,'Pueblo Libre':82,'Breña':80,
+  'San Miguel':78,'Surquillo':76,'Lima (Cercado)':75,'Miraflores':70,'San Borja':68,'La Victoria':65,
+  'Rímac':62,'Santiago de Surco':60,'Independencia':58,'Barranco':55,'San Martín de Porres':52,'San Luis':52,
+  'San Juan de Miraflores':48,'El Agustino':48,'Los Olivos':45,'Chorrillos':45,'Carmen de la Legua':45,
+  'Bellavista':42,'La Perla':42,'La Molina':42,'San Juan de Lurigancho':40,'Santa Anita':40,'Callao (Cercado)':40,
+  'Villa María del Triunfo':38,'La Punta':38,'Villa El Salvador':35,'Ate':35,'Comas':30,'Carabayllo':25,
+  'Puente Piedra':25,'Mi Perú':25,'Ventanilla':22,'Santa Rosa':20,'Chaclacayo':20,'Cieneguilla':20,
+  'Lurigancho-Chosica':18,'Ancón':15,'Pachacámac':15,'Lurín':12,'Punta Hermosa':10,'Punta Negra':10,
+  'San Bartolo':8,'Santa María del Mar':8,'Pucusana':5
 };
-
-/* ============================================================
-   DATOS BASE
-   ============================================================ */
 const DISTRITOS_LIMA = Object.keys(PROXIMIDAD).sort();
 const GRADOS = ["Secundaria completa","Técnica","Superior"];
 
-/* ============================================================
-   SECCIÓN 1: PERSONALIDAD (6 preguntas)
-   ============================================================ */
 const PREGUNTAS_PERSONALIDAD = [
-  { id:'p1', texto:'Cuando no hay clientes en la tienda, lo primero que haces es:',
-    opciones:[
-      {t:'Adelanto pendientes personales rápidos (responder mensajes, coordinar algo), así no dejo cosas para después.', p:-2},
-      {t:'Acomodo la mercadería por color y talla, y reviso qué falta reponer.', p:3},
-      {t:'Descanso un momento en la trastienda; así repongo energía para cuando lleguen clientes.', p:-1},
-      {t:'Reviso la vitrina, pruebo combinaciones nuevas y pienso cómo exhibir mejor.', p:2}
-    ]},
-  { id:'p2', texto:'Tu compañera llega tarde por tercera vez esta semana y te pide "no la delates" porque son amigas. ¿Qué haces?',
-    opciones:[
-      {t:'Le digo que hable ella misma con la encargada; si no lo hace hoy, tendré que reportarlo.', p:3},
-      {t:'Le ayudo a marcar su entrada hoy y le digo que es la última vez, para que no se sienta sola.', p:-2},
-      {t:'Le pregunto qué le pasa y la aconsejo, pero no digo nada a la encargada.', p:-1},
-      {t:'Le sugiero que hable con la encargada y le ofrezco acompañarla si quiere.', p:2}
-    ]},
-  { id:'p3', texto:'Si te equivocas al dar el vuelto y te das cuenta recién al final del día:',
-    opciones:[
-      {t:'Anoto la diferencia en un papel para revisarlo con la encargada al día siguiente.', p:-1},
-      {t:'Aviso de inmediato a la encargada y busco cómo solucionarlo con las boletas del día.', p:3},
-      {t:'Si es poco, lo asumo yo para no hacer problemas.', p:-2},
-      {t:'Reviso las boletas y si identifico al cliente, aviso a la encargada para devolverle.', p:2}
-    ]},
-  { id:'p4', texto:'Sobre el uso del celular en horario de trabajo:',
-    opciones:[
-      {t:'Lo uso brevemente para coordinar temas personales urgentes; hoy todos lo hacemos.', p:-2},
-      {t:'Lo mantengo guardado; solo lo reviso en mi refrigerio y en emergencias reales.', p:3},
-      {t:'Lo tengo a la vista porque a veces lo uso para mostrar productos o tomar fotos.', p:2},
-      {t:'Lo reviso en ratos libres cuando no hay público; es algo normal.', p:-2}
-    ]},
-  { id:'p5', texto:'Al cerrar el día, el sistema muestra S/ 30 de más respecto a lo que hay físicamente en caja. ¿Qué haces?',
-    opciones:[
-      {t:'Lo pongo como sobrante y lo reporto en el cierre del mes, para no hacer ajustes diarios.', p:-1},
-      {t:'Lo reporto por escrito a la encargada en el momento y dejo constancia firmada.', p:3},
-      {t:'Reviso las boletas del día para ver si fue un vuelto mal dado y aviso de inmediato.', p:2},
-      {t:'Lo guardo en un sobre con una nota y lo comento al día siguiente.', p:0}
-    ]},
-  { id:'p6', texto:'¿Cómo reaccionas si te dicen que tu horario cambiará la próxima semana (mañana por tarde)?',
-    opciones:[
-      {t:'Me adapto, entiendo que la tienda lo necesita; luego coordino detalles con la encargada.', p:3},
-      {t:'Aviso que no puedo, tengo otras responsabilidades asumidas para ese horario.', p:-1},
-      {t:'Lo converso con mis compañeras primero para ver quién puede apoyar.', p:-1},
-      {t:'Pregunto el motivo y coordino con la encargada cómo organizarnos.', p:3}
-    ]}
+  {id:'p1',texto:'Cuando no hay clientes en la tienda, lo primero que haces es:',opciones:[
+    {t:'Adelanto pendientes personales rápidos (responder mensajes, coordinar algo), así no dejo cosas para después.',p:-2},
+    {t:'Acomodo la mercadería por color y talla, y reviso qué falta reponer.',p:3},
+    {t:'Descanso un momento en la trastienda; así repongo energía para cuando lleguen clientes.',p:-1},
+    {t:'Reviso la vitrina, pruebo combinaciones nuevas y pienso cómo exhibir mejor.',p:2}]},
+  {id:'p2',texto:'Tu compañera llega tarde por tercera vez esta semana y te pide "no la delates" porque son amigas. ¿Qué haces?',opciones:[
+    {t:'Le digo que hable ella misma con la encargada; si no lo hace hoy, tendré que reportarlo.',p:3},
+    {t:'Le ayudo a marcar su entrada hoy y le digo que es la última vez, para que no se sienta sola.',p:-2},
+    {t:'Le pregunto qué le pasa y la aconsejo, pero no digo nada a la encargada.',p:-1},
+    {t:'Le sugiero que hable con la encargada y le ofrezco acompañarla si quiere.',p:2}]},
+  {id:'p3',texto:'Si te equivocas al dar el vuelto y te das cuenta recién al final del día:',opciones:[
+    {t:'Anoto la diferencia en un papel para revisarlo con la encargada al día siguiente.',p:-1},
+    {t:'Aviso de inmediato a la encargada y busco cómo solucionarlo con las boletas del día.',p:3},
+    {t:'Si es poco, lo asumo yo para no hacer problemas.',p:-2},
+    {t:'Reviso las boletas y si identifico al cliente, aviso a la encargada para devolverle.',p:2}]},
+  {id:'p4',texto:'Sobre el uso del celular en horario de trabajo:',opciones:[
+    {t:'Lo uso brevemente para coordinar temas personales urgentes; hoy todos lo hacemos.',p:-2},
+    {t:'Lo mantengo guardado; solo lo reviso en mi refrigerio y en emergencias reales.',p:3},
+    {t:'Lo tengo a la vista porque a veces lo uso para mostrar productos o tomar fotos.',p:2},
+    {t:'Lo reviso en ratos libres cuando no hay público; es algo normal.',p:-2}]},
+  {id:'p5',texto:'Al cerrar el día, el sistema muestra S/ 30 de más respecto a lo que hay físicamente en caja. ¿Qué haces?',opciones:[
+    {t:'Lo pongo como sobrante y lo reporto en el cierre del mes, para no hacer ajustes diarios.',p:-1},
+    {t:'Lo reporto por escrito a la encargada en el momento y dejo constancia firmada.',p:3},
+    {t:'Reviso las boletas del día para ver si fue un vuelto mal dado y aviso de inmediato.',p:2},
+    {t:'Lo guardo en un sobre con una nota y lo comento al día siguiente.',p:0}]},
+  {id:'p6',texto:'¿Cómo reaccionas si te dicen que tu horario cambiará la próxima semana (mañana por tarde)?',opciones:[
+    {t:'Me adapto, entiendo que la tienda lo necesita; luego coordino detalles con la encargada.',p:3},
+    {t:'Aviso que no puedo, tengo otras responsabilidades asumidas para ese horario.',p:-1},
+    {t:'Lo converso con mis compañeras primero para ver quién puede apoyar.',p:-1},
+    {t:'Pregunto el motivo y coordino con la encargada cómo organizarnos.',p:3}]}
 ];
 
-/* ============================================================
-   SECCIÓN 2: COMUNICACIÓN Y PERSUASIÓN (5 preguntas)
-   ============================================================ */
 const PREGUNTAS_COMUNICACION = [
-  { id:'co1', texto:'Entra una clienta con cara de pocos amigos, sin mirar nada. ¿Cuál es tu primera reacción?',
-    opciones:[
-      {t:'La dejo tranquila; cuando quiera algo me llamará.', p:-1},
-      {t:'Le sonrío y le digo algo ligero: "Bienvenida, pase sin compromiso, aquí todo se ve bonito hasta sin querer comprar".', p:3},
-      {t:'Me acerco y le pregunto directamente qué busca, para no perder tiempo.', p:1},
-      {t:'Le comento el clima o algo casual para romper el hielo antes de ofrecerle algo.', p:2}
-    ]},
-  { id:'co2', texto:'Un cliente varón entra a comprar un regalo para su esposa y no tiene idea qué elegir. Se le nota incómodo. ¿Qué haces?',
-    opciones:[
-      {t:'Le digo en broma: "Tranquilo, no es examen, solo es un regalo. La ayudamos a quedar como héroe".', p:3},
-      {t:'Le pregunto por el estilo de su esposa y le muestro 2 o 3 opciones que combinen.', p:3},
-      {t:'Le digo: "Cualquiera le va a gustar, todas son bonitas".', p:-1},
-      {t:'Le sugiero el producto más vendido y le explico por qué es un acierto seguro.', p:2}
-    ]},
-  { id:'co3', texto:'Una clienta te dice: "Está muy caro, en la tienda de la esquina lo vi más barato". ¿Cuál es la mejor respuesta?',
-    opciones:[
-      {t:'"Puede ser, pero le aseguro que la calidad no es la misma; esto le va a durar el doble".', p:2},
-      {t:'"Tiene razón, es un poco más, pero mire el detalle del cierre y el material; eso marca la diferencia".', p:3},
-      {t:'"Si quiere le puedo hacer un descuentito, pero no se lo diga a nadie".', p:-2},
-      {t:'"Bueno, si lo encuentra más barato, llévelo allá".', p:-3}
-    ]},
-  { id:'co4', texto:'Estás atendiendo a una clienta y entra otra apurada pidiendo algo rápido. ¿Qué haces?',
-    opciones:[
-      {t:'Le digo a la segunda: "Un momentito, en cuanto termine con ella la atiendo, no se me va".', p:3},
-      {t:'Dejo a la primera y atiendo a la segunda, porque se ve más apurada.', p:-2},
-      {t:'Les digo a las dos: "Ya las atiendo, por favor un momento", y trato de repartirme.', p:2},
-      {t:'Le pido a la primera que espere un momento y atiendo rápido a la segunda.', p:0}
-    ]},
-  { id:'co5', texto:'¿Cómo describirías tu estilo al atender a un cliente nuevo?',
-    opciones:[
-      {t:'Amable pero directa: le muestro lo que necesita y cierro la venta rápido.', p:0},
-      {t:'Cercana y conversadora: me gusta que se sienta cómoda, incluso me río con ellos si se da el momento.', p:3},
-      {t:'Respetuosa y tranquila: dejo que ellos tomen la iniciativa.', p:-1},
-      {t:'Con chispa y buena energía: una broma ligera siempre rompe el hielo.', p:2}
-    ]}
+  {id:'co1',texto:'Entra una clienta con cara de pocos amigos, sin mirar nada. ¿Cuál es tu primera reacción?',opciones:[
+    {t:'La dejo tranquila; cuando quiera algo me llamará.',p:-1},
+    {t:'Le sonrío y le digo algo ligero: "Bienvenida, pase sin compromiso, aquí todo se ve bonito hasta sin querer comprar".',p:3},
+    {t:'Me acerco y le pregunto directamente qué busca, para no perder tiempo.',p:1},
+    {t:'Le comento el clima o algo casual para romper el hielo antes de ofrecerle algo.',p:2}]},
+  {id:'co2',texto:'Un cliente varón entra a comprar un regalo para su esposa y no tiene idea qué elegir. Se le nota incómodo. ¿Qué haces?',opciones:[
+    {t:'Le digo en broma: "Tranquilo, no es examen, solo es un regalo. La ayudamos a quedar como héroe".',p:3},
+    {t:'Le pregunto por el estilo de su esposa y le muestro 2 o 3 opciones que combinen.',p:3},
+    {t:'Le digo: "Cualquiera le va a gustar, todas son bonitas".',p:-1},
+    {t:'Le sugiero el producto más vendido y le explico por qué es un acierto seguro.',p:2}]},
+  {id:'co3',texto:'Una clienta te dice: "Está muy caro, en la tienda de la esquina lo vi más barato". ¿Cuál es la mejor respuesta?',opciones:[
+    {t:'"Puede ser, pero le aseguro que la calidad no es la misma; esto le va a durar el doble".',p:2},
+    {t:'"Tiene razón, es un poco más, pero mire el detalle del cierre y el material; eso marca la diferencia".',p:3},
+    {t:'"Si quiere le puedo hacer un descuentito, pero no se lo diga a nadie".',p:-2},
+    {t:'"Bueno, si lo encuentra más barato, llévelo allá".',p:-3}]},
+  {id:'co4',texto:'Estás atendiendo a una clienta y entra otra apurada pidiendo algo rápido. ¿Qué haces?',opciones:[
+    {t:'Le digo a la segunda: "Un momentito, en cuanto termine con ella la atiendo, no se me va".',p:3},
+    {t:'Dejo a la primera y atiendo a la segunda, porque se ve más apurada.',p:-2},
+    {t:'Les digo a las dos: "Ya las atiendo, por favor un momento", y trato de repartirme.',p:2},
+    {t:'Le pido a la primera que espere un momento y atiendo rápido a la segunda.',p:0}]},
+  {id:'co5',texto:'¿Cómo describirías tu estilo al atender a un cliente nuevo?',opciones:[
+    {t:'Amable pero directa: le muestro lo que necesita y cierro la venta rápido.',p:0},
+    {t:'Cercana y conversadora: me gusta que se sienta cómoda, incluso me río con ellos si se da el momento.',p:3},
+    {t:'Respetuosa y tranquila: dejo que ellos tomen la iniciativa.',p:-1},
+    {t:'Con chispa y buena energía: una broma ligera siempre rompe el hielo.',p:2}]}
 ];
 
-/* ============================================================
-   SECCIÓN 3: MEMORIA VISUAL — 4 productos, diseño cálido y amigable
-   ============================================================ */
 const PRODUCTOS_MEMORIA = [
-  {emoji:'👜', n:'Cartera roja',     p:89},
-  {emoji:'💍', n:'Anillo dorado',    p:45},
-  {emoji:'📿', n:'Collar de perlas', p:60},
-  {emoji:'🎀', n:'Moño de regalo',   p:15}
+  {emoji:'👜',n:'Cartera roja',p:89},
+  {emoji:'💍',n:'Anillo dorado',p:45},
+  {emoji:'📿',n:'Collar de perlas',p:60},
+  {emoji:'🎀',n:'Moño de regalo',p:15}
 ];
 const PREGUNTAS_MEMORIA = [
-  {id:'m1', t:'¿Cuánto costaba la cartera roja 👜?', ops:['S/ 45','S/ 60','S/ 89','S/ 15'], ok:2},
-  {id:'m2', t:'¿Qué producto tenía el precio más bajo?', ops:['🎀 Moño','💍 Anillo','📿 Collar','👜 Cartera'], ok:0},
-  {id:'m3', t:'¿Cuánto costaba el collar de perlas 📿?', ops:['S/ 45','S/ 60','S/ 89','S/ 15'], ok:1},
-  {id:'m4', t:'¿Cuántos productos había en la vitrina?', ops:['3','4','5','6'], ok:1}
+  {id:'m1',t:'¿Cuánto costaba la cartera roja 👜?',ops:['S/ 45','S/ 60','S/ 89','S/ 15'],ok:2},
+  {id:'m2',t:'¿Qué producto tenía el precio más bajo?',ops:['🎀 Moño','💍 Anillo','📿 Collar','👜 Cartera'],ok:0},
+  {id:'m3',t:'¿Cuánto costaba el collar de perlas 📿?',ops:['S/ 45','S/ 60','S/ 89','S/ 15'],ok:1},
+  {id:'m4',t:'¿Cuántos productos había en la vitrina?',ops:['3','4','5','6'],ok:1}
 ];
-
-/* ============================================================
-   SECCIÓN 4: CÁLCULO (4 preguntas · 50 s c/u)
-   ============================================================ */
 const PREGUNTAS_CALCULO = [
-  {id:'c1', t:'Un cliente compra: cartera S/ 89 + aretes S/ 25 + blusa S/ 45. Paga con S/ 200. ¿Cuál es el vuelto?',
-    ops:['S/ 41','S/ 51','S/ 31','S/ 45'], ok:0},
-  {id:'c2', t:'Aplica un 20% de descuento a un producto de S/ 150. ¿Cuál es el precio final?',
-    ops:['S/ 130','S/ 135','S/ 120','S/ 125'], ok:2},
-  {id:'c3', t:'Cuadre del día: ventas S/ 1250. En caja hay S/ 1180 + Yape/Plin S/ 45. ¿Falta o sobra y cuánto?',
-    ops:['Sobra S/ 25','Falta S/ 25','Falta S/ 30','Está exacto'], ok:1},
-  {id:'c4', t:'Un cliente paga S/ 100 por 2 artículos de S/ 35 cada uno. ¿Cuál es el vuelto?',
-    ops:['S/ 25','S/ 30','S/ 35','S/ 20'], ok:1}
+  {id:'c1',t:'Un cliente compra: cartera S/ 89 + aretes S/ 25 + blusa S/ 45. Paga con S/ 200. ¿Cuál es el vuelto?',ops:['S/ 41','S/ 51','S/ 31','S/ 45'],ok:0},
+  {id:'c2',t:'Aplica un 20% de descuento a un producto de S/ 150. ¿Cuál es el precio final?',ops:['S/ 130','S/ 135','S/ 120','S/ 125'],ok:2},
+  {id:'c3',t:'Cuadre del día: ventas S/ 1250. En caja hay S/ 1180 + Yape/Plin S/ 45. ¿Falta o sobra y cuánto?',ops:['Sobra S/ 25','Falta S/ 25','Falta S/ 30','Está exacto'],ok:1},
+  {id:'c4',t:'Un cliente paga S/ 100 por 2 artículos de S/ 35 cada uno. ¿Cuál es el vuelto?',ops:['S/ 25','S/ 30','S/ 35','S/ 20'],ok:1}
 ];
-
-/* ============================================================
-   SECCIÓN 5: PREGUNTAS ABIERTAS (2)
-   ============================================================ */
 const PREGUNTAS_ABIERTAS = [
-  {id:'a1', t:'Cuéntanos brevemente tu último trabajo o, si nunca has trabajado, una situación donde asumiste una responsabilidad. Incluye la inicial del nombre de una persona involucrada y el mes aproximado.',
-   maxPalabras:70},
-  {id:'a2', t:'Si tuvieras que vender una cartera de S/ 120 a una clienta que dice "está muy caro", ¿qué le dirías? Escribe EXACTAMENTE las palabras que usarías, como si estuvieras hablando.',
-   maxPalabras:60}
+  {id:'a1',t:'Cuéntanos brevemente tu último trabajo o, si nunca has trabajado, una situación donde asumiste una responsabilidad. Incluye la inicial del nombre de una persona involucrada y el mes aproximado.',maxPalabras:70},
+  {id:'a2',t:'Si tuvieras que vender una cartera de S/ 120 a una clienta que dice "está muy caro", ¿qué le dirías? Escribe EXACTAMENTE las palabras que usarías, como si estuvieras hablando.',maxPalabras:60}
 ];
 
-/* ============================================================
-   UTILIDADES
-   ============================================================ */
 function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function $(id){return document.getElementById(id);}
@@ -289,125 +219,69 @@ function encodeRes(o){return btoa(unescape(encodeURIComponent(JSON.stringify(o))
 function decodeRes(c){try{return JSON.parse(decodeURIComponent(escape(atob(c.trim()))));}catch(e){return null;}}
 function emailYaUsado(email){
   try{
-    const lista = JSON.parse(localStorage.getItem('postulantes_jm')||'[]');
-    return lista.some(r => (r.correo||'').toLowerCase().trim() === email.toLowerCase().trim());
-  }catch(e){ return false; }
+    const lista=JSON.parse(localStorage.getItem('postulantes_jm')||'[]');
+    return lista.some(r=>(r.correo||'').toLowerCase().trim()===email.toLowerCase().trim());
+  }catch(e){return false;}
 }
 
-let S = {
-  registro:{}, respuestas:{personalidad:{},comunicacion:{},memoria:{},calculo:{},abiertas:{}},
-  orden:{}, flags:{tab:0,paste:0,inicio:null,fin:null},
-  timers:{calculoInterval:null,calculoRestante:0,tiemposCalculo:[]}
-};
+let S={registro:{},respuestas:{personalidad:{},comunicacion:{},memoria:{},calculo:{},abiertas:{}},orden:{},flags:{tab:0,paste:0,inicio:null,fin:null},timers:{calculoInterval:null,calculoRestante:0,tiemposCalculo:[]}};
 
-/* ============================================================
-   REGISTRO
-   ============================================================ */
 function vRegistro(){
-  const distritos = DISTRITOS_LIMA.map(d=>`<option value="${d}">${d}</option>`).join('');
-  const grados = GRADOS.map(g=>`<option value="${g}">${g}</option>`).join('');
+  const distritos=DISTRITOS_LIMA.map(d=>`<option value="${d}">${d}</option>`).join('');
+  const grados=GRADOS.map(g=>`<option value="${g}">${g}</option>`).join('');
   render(`
   <div class="card">
     <h2>📋 Datos del postulante</h2>
     <div class="notice info">Completa tus datos y luego continúa con el test. El proceso tiene 4 etapas: test → entrevista → prueba en tienda (2 h) → aprobación y contrato.</div>
-    <div class="notice danger" style="font-size:12px">
-      <b>Requisitos:</b> edad mínima <b>20 años</b> · cada correo puede rendir el test <b>una sola vez</b>.
-    </div>
+    <div class="notice danger" style="font-size:12px"><b>Requisitos:</b> edad mínima <b>${EDAD_MINIMA} años</b> · cada correo puede rendir el test <b>una sola vez</b>.</div>
     <form id="fReg" onsubmit="return guardarRegistro(event)">
-      <div class="field"><label>Nombre completo *</label>
-        <input required name="nombre" placeholder="Ej. María Fernanda Quispe Rojas"></div>
+      <div class="field"><label>Nombre completo *</label><input required name="nombre" placeholder="Ej. María Fernanda Quispe Rojas"></div>
       <div class="row">
-        <div class="field"><label>Número de documento *</label>
-          <input required name="dni" pattern="[0-9]{8,12}" title="Solo números (8 a 12 dígitos)" placeholder="Ej. 74581236"></div>
-        <div class="field"><label>Edad * (mín. ${EDAD_MINIMA})</label>
-          <input required name="edad" type="number" min="${EDAD_MINIMA}" max="70" placeholder="Ej. 22"></div>
+        <div class="field"><label>Número de documento *</label><input required name="dni" pattern="[0-9]{8,12}" title="Solo números (8 a 12 dígitos)" placeholder="Ej. 74581236"></div>
+        <div class="field"><label>Edad * (mín. ${EDAD_MINIMA})</label><input required name="edad" type="number" min="${EDAD_MINIMA}" max="70" placeholder="Ej. 22"></div>
       </div>
       <div class="row">
-        <div class="field"><label>Correo electrónico *</label>
-          <input required name="correo" type="email" placeholder="tucorreo@gmail.com"></div>
-        <div class="field"><label>Número telefónico *</label>
-          <input required name="telefono" pattern="[0-9+ ]{9,15}" placeholder="Ej. 987654321"></div>
+        <div class="field"><label>Correo electrónico *</label><input required name="correo" type="email" placeholder="tucorreo@gmail.com"></div>
+        <div class="field"><label>Número telefónico *</label><input required name="telefono" pattern="[0-9+ ]{9,15}" placeholder="Ej. 987654321"></div>
       </div>
-      <div class="field"><label>Grado de instrucción *</label>
-        <select required name="grado"><option value="">-- Selecciona --</option>${grados}</select></div>
-      <div class="field"><label>Distrito de residencia *</label>
-        <select required name="distrito"><option value="">-- Selecciona --</option>${distritos}</select></div>
+      <div class="field"><label>Grado de instrucción *</label><select required name="grado"><option value="">-- Selecciona --</option>${grados}</select></div>
+      <div class="field"><label>Distrito de residencia *</label><select required name="distrito"><option value="">-- Selecciona --</option>${distritos}</select></div>
       <div class="row">
-        <div class="field"><label>Modalidad *</label>
-          <select required name="modalidad" onchange="actualizarTurno()">
-            <option value="">-- Selecciona --</option>
-            <option value="Full time">Full time</option>
-            <option value="Part time">Part time</option>
-          </select></div>
-        <div class="field"><label>Permanencia mínima *</label>
-          <select required name="permanencia">
-            <option value="">-- Selecciona --</option>
-            <option value="3 meses">3 meses</option>
-            <option value="6 meses">6 meses</option>
-            <option value="Más de un año">Más de un año</option>
-          </select></div>
+        <div class="field"><label>Modalidad *</label><select required name="modalidad" onchange="actualizarTurno()"><option value="">-- Selecciona --</option><option value="Full time">Full time</option><option value="Part time">Part time</option></select></div>
+        <div class="field"><label>Permanencia mínima *</label><select required name="permanencia"><option value="">-- Selecciona --</option><option value="3 meses">3 meses</option><option value="6 meses">6 meses</option><option value="Más de un año">Más de un año</option></select></div>
       </div>
-      <div class="field"><label>Turno disponible *</label>
-        <select required name="turno" id="selTurno">
-          <option value="">-- Primero elige modalidad --</option>
-        </select></div>
+      <div class="field"><label>Turno disponible *</label><select required name="turno" id="selTurno"><option value="">-- Primero elige modalidad --</option></select></div>
       <div class="row">
-        <div class="field"><label>Disponibilidad inmediata *</label>
-          <select required name="disponibilidad"><option value="">-- Selecciona --</option>
-            <option value="Sí">Sí</option><option value="No">No</option></select></div>
-        <div class="field"><label>Aspiración económica (S/) *</label>
-          <input required name="sueldo" type="number" min="0" step="50" placeholder="Ej. 2000"></div>
+        <div class="field"><label>Disponibilidad inmediata *</label><select required name="disponibilidad"><option value="">-- Selecciona --</option><option value="Sí">Sí</option><option value="No">No</option></select></div>
+        <div class="field"><label>Aspiración económica (S/) *</label><input required name="sueldo" type="number" min="0" step="50" placeholder="Ej. 2000"></div>
       </div>
       <button class="btn btn-full" type="submit">Continuar al test →</button>
     </form>
   </div>`);
 }
-
 function actualizarTurno(){
-  const m = document.querySelector('[name=modalidad]').value;
-  const sel = $('selTurno');
-  let op = '<option value="">-- Selecciona turno --</option>';
-  if(m==='Full time'){
-    op += '<option value="9:00 a 18:00 (1 h refrigerio)">9:00 a 18:00 (1 h refrigerio)</option>';
-    op += '<option value="14:00 a 22:00">14:00 a 22:00</option>';
-  } else if(m==='Part time'){
-    op += '<option value="10:00 a 14:00">10:00 a 14:00</option>';
-    op += '<option value="18:00 a 22:00">18:00 a 22:00</option>';
-  }
-  sel.innerHTML = op;
+  const m=document.querySelector('[name=modalidad]').value;
+  const sel=$('selTurno');
+  let op='<option value="">-- Selecciona turno --</option>';
+  if(m==='Full time'){op+='<option value="9:00 a 18:00 (1 h refrigerio)">9:00 a 18:00 (1 h refrigerio)</option><option value="14:00 a 22:00">14:00 a 22:00</option>';}
+  else if(m==='Part time'){op+='<option value="10:00 a 14:00">10:00 a 14:00</option><option value="18:00 a 22:00">18:00 a 22:00</option>';}
+  sel.innerHTML=op;
 }
-
 function guardarRegistro(e){
   e.preventDefault();
-  const fd = new FormData(e.target);
-  const reg = Object.fromEntries(fd);
-
-  // 1. Validar edad mínima
-  const edad = +reg.edad;
-  if(edad < EDAD_MINIMA){
-    alert('❌ Debes tener al menos '+EDAD_MINIMA+' años para postular. Edad registrada: '+edad);
-    return false;
-  }
-
-  // 2. Validar email único
-  if(emailYaUsado(reg.correo)){
-    alert('❌ Este correo ya fue registrado en una postulación anterior.\n\nCada correo puede rendir el test UNA sola vez. Si eres otra persona, usa un correo distinto.');
-    return false;
-  }
-
-  S.registro = reg;
-  PREGUNTAS_PERSONALIDAD.forEach(q=>{ S.orden[q.id] = shuffle(q.opciones.map((o,i)=>({...o, orig:i}))); });
-  PREGUNTAS_COMUNICACION.forEach(q=>{ S.orden[q.id] = shuffle(q.opciones.map((o,i)=>({...o, orig:i}))); });
-  PREGUNTAS_MEMORIA.forEach(q=>{ S.orden[q.id] = shuffle(q.ops.map((o,i)=>({o, i}))); });
-  PREGUNTAS_CALCULO.forEach(q=>{ S.orden[q.id] = shuffle(q.ops.map((o,i)=>({o, i}))); });
-  S.flags.inicio = Date.now();
+  const reg=Object.fromEntries(new FormData(e.target));
+  if(+reg.edad < EDAD_MINIMA){alert('❌ Debes tener al menos '+EDAD_MINIMA+' años para postular. Edad registrada: '+reg.edad);return false;}
+  if(emailYaUsado(reg.correo)){alert('❌ Este correo ya fue registrado en una postulación anterior.\n\nCada correo puede rendir el test UNA sola vez.');return false;}
+  S.registro=reg;
+  PREGUNTAS_PERSONALIDAD.forEach(q=>{S.orden[q.id]=shuffle(q.opciones.map((o,i)=>({...o,orig:i})));});
+  PREGUNTAS_COMUNICACION.forEach(q=>{S.orden[q.id]=shuffle(q.opciones.map((o,i)=>({...o,orig:i})));});
+  PREGUNTAS_MEMORIA.forEach(q=>{S.orden[q.id]=shuffle(q.ops.map((o,i)=>({o,i})));});
+  PREGUNTAS_CALCULO.forEach(q=>{S.orden[q.id]=shuffle(q.ops.map((o,i)=>({o,i})));});
+  S.flags.inicio=Date.now();
   vIntroTest();
   return false;
 }
 
-/* ============================================================
-   INTRO DEL TEST
-   ============================================================ */
 function vIntroTest(){
   render(`
   <div class="card">
@@ -422,102 +296,62 @@ function vIntroTest(){
         <li>Dos preguntas abiertas finales</li>
       </ol>
     </div>
-    <div class="notice">
-      ⚠️ El sistema registra el tiempo, los cambios de pestaña y los intentos de copiar/pegar.
-      Responde con sinceridad. <b>No busques respuestas en internet o con IA.</b>
-    </div>
+    <div class="notice">⚠️ El sistema registra el tiempo, los cambios de pestaña y los intentos de copiar/pegar. Responde con sinceridad. <b>No busques respuestas en internet o con IA.</b></div>
     <button class="btn btn-full" onclick="vPersonalidad(0)">Comenzar test →</button>
   </div>`);
 }
 
-/* ============================================================
-   SECCIÓN 1: PERSONALIDAD
-   ============================================================ */
 function vPersonalidad(i){
-  if(i >= PREGUNTAS_PERSONALIDAD.length){ return vComunicacion(0); }
-  const q = PREGUNTAS_PERSONALIDAD[i];
-  const ops = S.orden[q.id];
-  const total = PREGUNTAS_PERSONALIDAD.length;
-  const prog = (i/total)*100;
+  if(i>=PREGUNTAS_PERSONALIDAD.length){return vComunicacion(0);}
+  const q=PREGUNTAS_PERSONALIDAD[i],ops=S.orden[q.id],total=PREGUNTAS_PERSONALIDAD.length,prog=(i/total)*100;
   render(`
   <div class="card">
     <div class="progress"><div style="width:${prog}%"></div></div>
     <p style="font-size:12px;color:var(--muted);margin-bottom:8px">Pregunta ${i+1} de ${total} · Sección 1 — Personalidad</p>
     <h2>${esc(q.texto)}</h2>
-    <div id="ops">
-      ${ops.map((o,k)=>`
-        <label class="opt" onclick="selPers('${q.id}',${k},'${esc(o.t).replace(/'/g,"\\'")}',${o.p})">
-          ${esc(o.t)}
-        </label>`).join('')}
-    </div>
+    <div id="ops">${ops.map((o,k)=>`<label class="opt" onclick="selPers('${q.id}',${k},'${esc(o.t).replace(/'/g,"\\'")}',${o.p})">${esc(o.t)}</label>`).join('')}</div>
     <button class="btn" id="btnNext" disabled onclick="vPersonalidad(${i+1})">Siguiente →</button>
   </div>`);
-  window.selPers = function(qid, k, txt, p){
-    S.respuestas.personalidad[qid] = {txt, p};
+  window.selPers=function(qid,k,txt,p){
+    S.respuestas.personalidad[qid]={txt,p};
     document.querySelectorAll('#ops .opt').forEach(el=>el.classList.remove('sel'));
     document.querySelectorAll('#ops .opt')[k].classList.add('sel');
-    $('btnNext').disabled = false;
+    $('btnNext').disabled=false;
   };
 }
 
-/* ============================================================
-   SECCIÓN 2: COMUNICACIÓN
-   ============================================================ */
 function vComunicacion(i){
-  if(i >= PREGUNTAS_COMUNICACION.length){ return vMemoria1(); }
-  const q = PREGUNTAS_COMUNICACION[i];
-  const ops = S.orden[q.id];
-  const total = PREGUNTAS_COMUNICACION.length;
-  const prog = (i/total)*100;
+  if(i>=PREGUNTAS_COMUNICACION.length){return vMemoria1();}
+  const q=PREGUNTAS_COMUNICACION[i],ops=S.orden[q.id],total=PREGUNTAS_COMUNICACION.length,prog=(i/total)*100;
   render(`
   <div class="card">
     <div class="progress"><div style="width:${prog}%"></div></div>
     <p style="font-size:12px;color:var(--muted);margin-bottom:8px">Pregunta ${i+1} de ${total} · Sección 2 — Comunicación</p>
     <h2>${esc(q.texto)}</h2>
-    <div id="opsC">
-      ${ops.map((o,k)=>`
-        <label class="opt" onclick="selCom('${q.id}',${k},'${esc(o.t).replace(/'/g,"\\'")}',${o.p})">
-          ${esc(o.t)}
-        </label>`).join('')}
-    </div>
+    <div id="opsC">${ops.map((o,k)=>`<label class="opt" onclick="selCom('${q.id}',${k},'${esc(o.t).replace(/'/g,"\\'")}',${o.p})">${esc(o.t)}</label>`).join('')}</div>
     <button class="btn" id="btnCom" disabled onclick="vComunicacion(${i+1})">Siguiente →</button>
   </div>`);
-  window.selCom = function(qid, k, txt, p){
-    S.respuestas.comunicacion[qid] = {txt, p};
+  window.selCom=function(qid,k,txt,p){
+    S.respuestas.comunicacion[qid]={txt,p};
     document.querySelectorAll('#opsC .opt').forEach(el=>el.classList.remove('sel'));
     document.querySelectorAll('#opsC .opt')[k].classList.add('sel');
-    $('btnCom').disabled = false;
+    $('btnCom').disabled=false;
   };
 }
 
-/* ============================================================
-   SECCIÓN 3: MEMORIA VISUAL — diseño amigable
-   ============================================================ */
 function vMemoria1(){
   render(`
   <div class="card">
     <h2>🧠 Prueba de memoria visual</h2>
-    <div class="notice" style="background:#fce7f3;border-color:#ec4899;color:#831843">
-      🌸 Observa con calma estas <b>4 piezas</b> de la vitrina y sus precios.
-      Tendrás <b>20 segundos</b> para memorizarlas. ¡Respira y concéntrate!
-    </div>
+    <div class="notice" style="background:#fce7f3;border-color:#ec4899;color:#831843">🌸 Observa con calma estas <b>4 piezas</b> de la vitrina y sus precios. Tendrás <b>20 segundos</b> para memorizarlas. ¡Respira y concéntrate!</div>
     <div class="timer" id="tmr" style="color:#ec4899">20</div>
     <div class="mem-grid">
-      ${PRODUCTOS_MEMORIA.map(p=>`
-        <div class="mem-card">
-          <span class="emoji">${p.emoji}</span>
-          <div class="nom">${esc(p.n)}</div>
-          <div class="precio">S/ ${p.p}</div>
-        </div>`).join('')}
+      ${PRODUCTOS_MEMORIA.map(p=>`<div class="mem-card"><span class="emoji">${p.emoji}</span><div class="nom">${esc(p.n)}</div><div class="precio">S/ ${p.p}</div></div>`).join('')}
     </div>
   </div>`);
-  let t = 20;
-  const iv = setInterval(()=>{
-    t--; const el=$('tmr'); if(el) el.textContent=t;
-    if(t<=0){ clearInterval(iv); vMemoria2(); }
-  },1000);
+  let t=20;
+  const iv=setInterval(()=>{t--;const el=$('tmr');if(el)el.textContent=t;if(t<=0){clearInterval(iv);vMemoria2();}},1000);
 }
-
 function vMemoria2(){
   render(`
   <div class="card">
@@ -526,35 +360,22 @@ function vMemoria2(){
     ${PREGUNTAS_MEMORIA.map((q,i)=>`
       <div class="field">
         <label>${i+1}. ${esc(q.t)}</label>
-        <div>
-          ${S.orden[q.id].map((o,k)=>`
-            <label class="opt" onclick="selMem('${q.id}',${k},'${esc(o.o)}',${o.i})">
-              ${esc(o.o)}
-            </label>`).join('')}
-        </div>
+        <div>${S.orden[q.id].map((o,k)=>`<label class="opt" onclick="selMem('${q.id}',${k},'${esc(o.o)}',${o.i})">${esc(o.o)}</label>`).join('')}</div>
       </div>`).join('')}
     <button class="btn" id="btnMem" disabled onclick="vCalculo(0)">Continuar →</button>
   </div>`);
-  window.selMem = function(qid,k,txt,origIdx){
-    S.respuestas.memoria[qid] = {txt, origIdx, correcta: PREGUNTAS_MEMORIA.find(p=>p.id===qid).ok === origIdx};
-    const q = PREGUNTAS_MEMORIA.find(p=>p.id===qid);
-    const idx = PREGUNTAS_MEMORIA.indexOf(q);
-    const cont = document.querySelectorAll('.field')[idx];
+  window.selMem=function(qid,k,txt,origIdx){
+    S.respuestas.memoria[qid]={txt,origIdx,correcta:PREGUNTAS_MEMORIA.find(p=>p.id===qid).ok===origIdx};
+    const q=PREGUNTAS_MEMORIA.find(p=>p.id===qid),idx=PREGUNTAS_MEMORIA.indexOf(q),cont=document.querySelectorAll('.field')[idx];
     cont.querySelectorAll('.opt').forEach(el=>el.classList.remove('sel'));
     cont.querySelectorAll('.opt')[k].classList.add('sel');
-    if(Object.keys(S.respuestas.memoria).length === PREGUNTAS_MEMORIA.length) $('btnMem').disabled = false;
+    if(Object.keys(S.respuestas.memoria).length===PREGUNTAS_MEMORIA.length)$('btnMem').disabled=false;
   };
 }
 
-/* ============================================================
-   SECCIÓN 4: CÁLCULO
-   ============================================================ */
 function vCalculo(i){
-  if(i >= PREGUNTAS_CALCULO.length){ return vAbiertas(); }
-  const q = PREGUNTAS_CALCULO[i];
-  const ops = S.orden[q.id];
-  const total = PREGUNTAS_CALCULO.length;
-  const prog = (i/total)*100;
+  if(i>=PREGUNTAS_CALCULO.length){return vAbiertas();}
+  const q=PREGUNTAS_CALCULO[i],ops=S.orden[q.id],total=PREGUNTAS_CALCULO.length,prog=(i/total)*100;
   render(`
   <div class="card">
     <div class="progress"><div style="width:${prog}%"></div></div>
@@ -564,363 +385,293 @@ function vCalculo(i){
     </div>
     <div class="timer-bar"><div id="barCalc" style="width:100%"></div></div>
     <h2>${esc(q.t)}</h2>
-    <div id="opsCal">
-      ${ops.map((o,k)=>`
-        <label class="opt" onclick="selCal('${q.id}',${k},'${esc(o.o)}',${o.i})">
-          ${esc(o.o)}
-        </label>`).join('')}
-    </div>
+    <div id="opsCal">${ops.map((o,k)=>`<label class="opt" onclick="selCal('${q.id}',${k},'${esc(o.o)}',${o.i})">${esc(o.o)}</label>`).join('')}</div>
     <button class="btn" id="btnCal" disabled onclick="siguienteCalculo(${i})">Siguiente →</button>
   </div>`);
-  window.selCal = function(qid,k,txt,origIdx){
-    S.respuestas.calculo[qid] = {txt, origIdx, correcta: PREGUNTAS_CALCULO.find(p=>p.id===qid).ok === origIdx};
+  window.selCal=function(qid,k,txt,origIdx){
+    S.respuestas.calculo[qid]={txt,origIdx,correcta:PREGUNTAS_CALCULO.find(p=>p.id===qid).ok===origIdx};
     document.querySelectorAll('#opsCal .opt').forEach(el=>el.classList.remove('sel'));
     document.querySelectorAll('#opsCal .opt')[k].classList.add('sel');
-    $('btnCal').disabled = false;
+    $('btnCal').disabled=false;
   };
   iniciarTimerCalculoPregunta(i);
 }
-
-function iniciarTimerCalculoPregunta(indicePregunta){
+function iniciarTimerCalculoPregunta(indice){
   detenerTimerCalculo();
-  S.timers.calculoRestante = TIEMPO_POR_CALCULO;
-  S.timers.calculoInterval = setInterval(()=>{
+  S.timers.calculoRestante=TIEMPO_POR_CALCULO;
+  S.timers.calculoInterval=setInterval(()=>{
     S.timers.calculoRestante--;
-    const t = S.timers.calculoRestante;
-    const el = $('tmrCalc'), bar = $('barCalc');
-    if(el){ el.textContent = t; el.parentElement.style.color = t<=15 ? 'var(--bad)' : 'var(--accent)'; }
-    if(bar){ bar.style.width = (Math.max(t,0)/TIEMPO_POR_CALCULO*100)+'%'; }
-    if(t <= 0){
+    const t=S.timers.calculoRestante,el=$('tmrCalc'),bar=$('barCalc');
+    if(el){el.textContent=t;el.parentElement.style.color=t<=15?'var(--bad)':'var(--accent)';}
+    if(bar){bar.style.width=(Math.max(t,0)/TIEMPO_POR_CALCULO*100)+'%';}
+    if(t<=0){
       detenerTimerCalculo();
-      S.timers.tiemposCalculo[indicePregunta] = TIEMPO_POR_CALCULO;
-      const qid = PREGUNTAS_CALCULO[indicePregunta].id;
-      if(!S.respuestas.calculo[qid]){
-        S.respuestas.calculo[qid] = {txt:'(sin responder)', origIdx:-1, correcta:false};
-      }
-      vCalculo(indicePregunta+1);
+      S.timers.tiemposCalculo[indice]=TIEMPO_POR_CALCULO;
+      const qid=PREGUNTAS_CALCULO[indice].id;
+      if(!S.respuestas.calculo[qid])S.respuestas.calculo[qid]={txt:'(sin responder)',origIdx:-1,correcta:false};
+      vCalculo(indice+1);
     }
   },1000);
 }
-
 function siguienteCalculo(i){
-  const qid = PREGUNTAS_CALCULO[i].id;
-  const tiempoUsado = TIEMPO_POR_CALCULO - S.timers.calculoRestante;
-  S.timers.tiemposCalculo[i] = tiempoUsado;
+  const qid=PREGUNTAS_CALCULO[i].id;
+  S.timers.tiemposCalculo[i]=TIEMPO_POR_CALCULO-S.timers.calculoRestante;
   detenerTimerCalculo();
-  if(!S.respuestas.calculo[qid]){
-    S.respuestas.calculo[qid] = {txt:'(sin responder)', origIdx:-1, correcta:false};
-  }
+  if(!S.respuestas.calculo[qid])S.respuestas.calculo[qid]={txt:'(sin responder)',origIdx:-1,correcta:false};
   vCalculo(i+1);
 }
+function detenerTimerCalculo(){if(S.timers.calculoInterval){clearInterval(S.timers.calculoInterval);S.timers.calculoInterval=null;}}
 
-function detenerTimerCalculo(){
-  if(S.timers.calculoInterval){ clearInterval(S.timers.calculoInterval); S.timers.calculoInterval = null; }
-}
-
-/* ============================================================
-   SECCIÓN 5: PREGUNTAS ABIERTAS
-   ============================================================ */
 function vAbiertas(){
   detenerTimerCalculo();
   render(`
   <div class="card">
     <h2>✍️ Preguntas abiertas</h2>
-    <div class="notice danger">
-      <b>Importante:</b> responde con tus propias palabras. No copies de internet ni de IA.
-      El sistema detecta cambios de pestaña y copiado/pegado.
-    </div>
+    <div class="notice danger"><b>Importante:</b> responde con tus propias palabras. No copies de internet ni de IA. El sistema detecta cambios de pestaña y copiado/pegado.</div>
     ${PREGUNTAS_ABIERTAS.map((q,i)=>`
       <div class="field">
         <label>${i+1}. ${esc(q.t)} <span style="color:var(--muted);font-weight:400">(máx. ${q.maxPalabras} palabras)</span></label>
-        <textarea data-qid="${q.id}" data-max="${q.maxPalabras}"
-          oninput="contarPalabras(this)" onpaste="marcarPaste(event)"></textarea>
+        <textarea data-qid="${q.id}" data-max="${q.maxPalabras}" oninput="contarPalabras(this)" onpaste="marcarPaste(event)"></textarea>
         <div class="counter"><span>0</span>/${q.maxPalabras} palabras</div>
       </div>`).join('')}
     <button class="btn btn-full" onclick="finalizarTest()">Finalizar y enviar test</button>
   </div>`);
 }
-
 function contarPalabras(el){
-  const w = (el.value.trim().match(/\S+/g)||[]).length;
-  el.parentElement.querySelector('.counter span').textContent = w;
-  el.parentElement.querySelector('.counter').style.color = w > +el.dataset.max ? 'var(--bad)' : 'var(--muted)';
+  const w=(el.value.trim().match(/\S+/g)||[]).length;
+  el.parentElement.querySelector('.counter span').textContent=w;
+  el.parentElement.querySelector('.counter').style.color=w>+el.dataset.max?'var(--bad)':'var(--muted)';
 }
-
-function marcarPaste(e){
-  e.preventDefault();
-  S.flags.paste++;
-  alert('Por seguridad, no está permitido pegar texto. Escribe tu respuesta con tus propias palabras.');
-}
+function marcarPaste(e){e.preventDefault();S.flags.paste++;alert('Por seguridad, no está permitido pegar texto. Escribe tu respuesta con tus propias palabras.');}
 
 /* ============================================================
-   FINALIZAR + AUDITORÍA PSICOMÉTRICA
+   FINALIZAR — VERSIÓN MODERNA CON WHATSAPP DEEPLINK
    ============================================================ */
 function finalizarTest(){
   detenerTimerCalculo();
-  const tas = document.querySelectorAll('textarea[data-qid]');
+  const tas=document.querySelectorAll('textarea[data-qid]');
   for(const t of tas){
-    if(t.value.trim().length < 15){ alert('Por favor responde todas las preguntas abiertas con al menos una frase.'); t.focus(); return; }
-    S.respuestas.abiertas[t.dataset.qid] = t.value.trim();
+    if(t.value.trim().length<15){alert('Por favor responde todas las preguntas abiertas con al menos una frase.');t.focus();return;}
+    S.respuestas.abiertas[t.dataset.qid]=t.value.trim();
   }
-  S.flags.fin = Date.now();
-  S.flags.tiempoTotal = Math.round((S.flags.fin - S.flags.inicio)/1000);
+  S.flags.fin=Date.now();
+  S.flags.tiempoTotal=Math.round((S.flags.fin-S.flags.inicio)/1000);
 
-  let pPers = 0, maxPers = 0;
-  PREGUNTAS_PERSONALIDAD.forEach(q=>{ pPers += S.respuestas.personalidad[q.id]?.p ?? 0; maxPers += 3; });
-  let pCom = 0, maxCom = 0;
-  PREGUNTAS_COMUNICACION.forEach(q=>{ pCom += S.respuestas.comunicacion[q.id]?.p ?? 0; maxCom += 3; });
-  let pMem = 0;
-  Object.values(S.respuestas.memoria).forEach(m=>{ if(m.correcta) pMem++; });
-  let pCal = 0;
-  Object.values(S.respuestas.calculo).forEach(c=>{ if(c.correcta) pCal++; });
-  const tiempoCalculoTotal = (S.timers.tiemposCalculo||[]).reduce((a,b)=>a+b,0);
+  let pPers=0,maxPers=0;PREGUNTAS_PERSONALIDAD.forEach(q=>{pPers+=S.respuestas.personalidad[q.id]?.p??0;maxPers+=3;});
+  let pCom=0,maxCom=0;PREGUNTAS_COMUNICACION.forEach(q=>{pCom+=S.respuestas.comunicacion[q.id]?.p??0;maxCom+=3;});
+  let pMem=0;Object.values(S.respuestas.memoria).forEach(m=>{if(m.correcta)pMem++;});
+  let pCal=0;Object.values(S.respuestas.calculo).forEach(c=>{if(c.correcta)pCal++;});
+  const tiempoCalculoTotal=(S.timers.tiemposCalculo||[]).reduce((a,b)=>a+b,0);
 
-  const flags = [];
-  if(S.flags.tiempoTotal < TIEMPO_MINIMO_TEST) flags.push('Tiempo total muy bajo ('+S.flags.tiempoTotal+'s) — posible uso de IA o respuestas al azar.');
-  if(S.flags.tab > 2) flags.push('Cambios de pestaña detectados ('+S.flags.tab+') — posible búsqueda externa.');
-  if(S.flags.paste > 0) flags.push('Intento(s) de pegar texto ('+S.flags.paste+') — posible uso de IA.');
-  if(S.registro.modalidad === 'Full time' && S.registro.permanencia === '3 meses')
-    flags.push('Coherencia: eligió Full time pero permanencia de solo 3 meses.');
+  const flags=[];
+  if(S.flags.tiempoTotal<TIEMPO_MINIMO_TEST)flags.push('Tiempo total muy bajo ('+S.flags.tiempoTotal+'s) — posible uso de IA o respuestas al azar.');
+  if(S.flags.tab>2)flags.push('Cambios de pestaña detectados ('+S.flags.tab+') — posible búsqueda externa.');
+  if(S.flags.paste>0)flags.push('Intento(s) de pegar texto ('+S.flags.paste+') — posible uso de IA.');
+  if(S.registro.modalidad==='Full time'&&S.registro.permanencia==='3 meses')flags.push('Coherencia: eligió Full time pero permanencia de solo 3 meses.');
 
-  const psico = auditarPsicometricamente({
-    pPers,maxPers,pCom,maxCom,pMem,pCal,
-    tiemposCalculo:S.timers.tiemposCalculo, flags, S
-  });
+  const psico=auditarPsicometricamente({pPers,maxPers,pCom,maxCom,pMem,pCal,tiemposCalculo:S.timers.tiemposCalculo,flags,S});
 
-  const resultado = {
-    ...S.registro,
-    fecha: new Date().toISOString(),
-    puntajes: {
-      personalidad:pPers, maxPersonalidad:maxPers,
-      comunicacion:pCom, maxComunicacion:maxCom,
-      memoria:pMem, maxMemoria:PREGUNTAS_MEMORIA.length,
-      calculo:pCal, maxCalculo:PREGUNTAS_CALCULO.length
-    },
-    tiempoCalculoTotal,
-    tiemposCalculo: S.timers.tiemposCalculo,
-    respuestas: S.respuestas,
-    flags,
-    flagCount: {tab:S.flags.tab, paste:S.flags.paste, tiempoTotal:S.flags.tiempoTotal},
-    abiertas: S.respuestas.abiertas,
-    psicometrico: psico
+  const resultado={
+    ...S.registro,fecha:new Date().toISOString(),
+    puntajes:{personalidad:pPers,maxPersonalidad:maxPers,comunicacion:pCom,maxComunicacion:maxCom,memoria:pMem,maxMemoria:PREGUNTAS_MEMORIA.length,calculo:pCal,maxCalculo:PREGUNTAS_CALCULO.length},
+    tiempoCalculoTotal,tiemposCalculo:S.timers.tiemposCalculo,respuestas:S.respuestas,flags,
+    flagCount:{tab:S.flags.tab,paste:S.flags.paste,tiempoTotal:S.flags.tiempoTotal},
+    abiertas:S.respuestas.abiertas,psicometrico:psico
   };
 
   try{
-    const lista = JSON.parse(localStorage.getItem('postulantes_jm')||'[]');
+    const lista=JSON.parse(localStorage.getItem('postulantes_jm')||'[]');
     lista.push(resultado);
-    localStorage.setItem('postulantes_jm', JSON.stringify(lista));
+    localStorage.setItem('postulantes_jm',JSON.stringify(lista));
   }catch(e){}
 
-  const code = encodeRes(resultado);
+  const code=encodeRes(resultado);
+  window.__lastResult=resultado;
+  window.__lastCode=code;
+
+  // Mensaje WhatsApp pre-armado
+  const nombrePila=(S.registro.nombre||'').split(' ')[0]||'';
+  const waMsg = `Hola SAFRI 👋\n\n` +
+                `Terminé el test de evaluación de postulantes.\n\n` +
+                `👤 *Nombre:* ${S.registro.nombre}\n` +
+                `📋 *Modalidad:* ${S.registro.modalidad}\n` +
+                `⏰ *Turno:* ${S.registro.turno}\n` +
+                `📍 *Distrito:* ${S.registro.distrito}\n` +
+                `💰 *Aspiración:* S/ ${S.registro.sueldo}\n\n` +
+                `*Código de evaluación:*\n${code}\n\n` +
+                `Quedo atenta a su respuesta. ¡Gracias!`;
+
+  const waUrl = `https://wa.me/${STORE_WHATSAPP}?text=${encodeURIComponent(waMsg)}`;
+
+  const mailSubject = `Postulación SAFRI — ${S.registro.nombre}`;
+  const mailBody = waMsg.replace(/\*/g,'');
+  const mailUrl = `mailto:${STORE_EMAIL}?subject=${encodeURIComponent(mailSubject)}&body=${encodeURIComponent(mailBody)}`;
+
   render(`
-  <div class="card">
-    <h2>✅ Test finalizado</h2>
-    <div class="result-box">
-      <p>Tu test fue registrado correctamente.</p>
-      <p style="margin-top:8px;font-size:13px">Copia el siguiente código y envíalo por WhatsApp al número del aviso.</p>
+  <div class="card" style="text-align:center">
+    <span class="success-icon">🎉</span>
+    <h2 style="font-size:22px;margin-bottom:6px">¡Test completado!</h2>
+    <p style="color:var(--muted);font-size:14px;margin-bottom:24px;max-width:480px;margin-left:auto;margin-right:auto">
+      Tu evaluación fue registrada correctamente. Ahora envíala a <b>SAFRI</b> con un solo toque.
+    </p>
+
+    <a href="${waUrl}" target="_blank" rel="noopener" class="btn btn-wa btn-full">
+      📱 Enviar resultado por WhatsApp
+    </a>
+
+    <div class="notice success" style="margin-top:14px;text-align:left">
+      ✅ Al presionar el botón, WhatsApp se abrirá con el mensaje listo. Solo presiona <b>Enviar</b> y listo.
     </div>
-    <h3>Código de postulación</h3>
-    <div class="code-box" id="cod">${code}</div>
-    <button class="btn btn-full" onclick="copiarCodigo()">📋 Copiar código</button>
-    <br><br>
-    <button class="btn btn-ghost btn-full" onclick="descargarJSON()">⬇️ Descargar como archivo</button>
-    <div class="notice success" style="margin-top:16px">
+
+    <a href="${mailUrl}" class="btn btn-mail btn-full" style="margin-top:10px">
+      📧 Enviar por correo (alternativa)
+    </a>
+
+    <div style="margin-top:22px">
+      <button class="btn-ghost btn" style="font-size:12px;padding:8px 14px" onclick="toggleAvanzado()">
+        <span id="toggleTxt">▼ Ver opciones avanzadas</span>
+      </button>
+    </div>
+
+    <div id="avanzado" style="display:none;margin-top:16px;text-align:left">
+      <div class="notice info" style="font-size:12px">Si el botón de WhatsApp no funcionó, copia este código y envíalo manualmente por WhatsApp al mismo número del aviso.</div>
+      <div class="code-box" id="cod">${code}</div>
+      <button class="btn btn-ghost btn-full" onclick="copiarCodigo()">📋 Copiar código</button>
+      <button class="btn btn-ghost btn-full" style="margin-top:8px" onclick="descargarJSON()">⬇️ Descargar JSON</button>
+    </div>
+
+    <div class="notice info" style="margin-top:22px;text-align:left;font-size:12px">
       🔒 Tu correo quedó registrado. No podrás rendir el test nuevamente con el mismo correo.
     </div>
   </div>`);
-  window.__lastResult = resultado;
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 
-/* ============================================================
-   AUDITORÍA PSICOMÉTRICA "IA" + CONTEXTO LOGÍSTICO-ECONÓMICO
-   ============================================================ */
-function auditarPsicometricamente({pPers,maxPers,pCom,maxCom,pMem,pCal,tiemposCalculo,flags,S}){
-  const resp = S.respuestas;
-  const pctPers = maxPers? (pPers/maxPers)*100 : 0;
-  const pctCom  = maxCom ? (pCom/maxCom)*100 : 0;
-  const pctMem  = (pMem/PREGUNTAS_MEMORIA.length)*100;
-  const pctCal  = (pCal/PREGUNTAS_CALCULO.length)*100;
-
-  // Dimensiones base
-  let extro = pctCom*0.7 + pctPers*0.3;
-  let amab  = pctCom*0.5 + pctPers*0.5;
-  let respo = pctPers*0.6 + pctCal*0.4;
-  let estab = ((resp.personalidad.p6?.p>=2?90:60)+(resp.personalidad.p2?.p>=2?90:60)+(resp.comunicacion.co4?.p>=2?90:60))/3;
-  let apert = pctPers*0.6 + pctCom*0.4;
-  let resil = ((resp.comunicacion.co3?.p>=2?90:50)+(resp.comunicacion.co5?.p>=2?90:55)+pctCom)/3;
-
-  if(resp.personalidad.p4?.p < 0) respo -= 15;
-  if(resp.personalidad.p5?.p < 0) respo -= 20;
-  if(resp.personalidad.p2?.p >= 3) respo += 10;
-  if(resp.comunicacion.co2?.p >= 3) extro += 10;
-  if(resp.comunicacion.co3?.p >= 3) resil += 10;
-  if(resp.comunicacion.co1?.p >= 3) extro += 5;
-
-  const penal = flags.length*5;
-  extro = Math.max(0, Math.min(100, extro - penal*0.3));
-  amab  = Math.max(0, Math.min(100, amab  - penal*0.3));
-  respo = Math.max(0, Math.min(100, respo - penal*0.5));
-  estab = Math.max(0, Math.min(100, estab - penal*0.3));
-  apert = Math.max(0, Math.min(100, apert - penal*0.3));
-  resil = Math.max(0, Math.min(100, resil - penal*0.4));
-
-  /* ---- NUEVAS DIMENSIONES: CERCANÍA Y EXPECTATIVA ---- */
-  const distrito = S.registro.distrito || '';
-  const cercaniaScore = PROXIMIDAD[distrito] ?? 30; // si no está en tabla, valor bajo
-
-  const sueldoPedido = +S.registro.sueldo || 0;
-  const modalidad = S.registro.modalidad;
-  let expectativaScore = 0, expectativaNota = '';
-  if(modalidad === 'Full time'){
-    // Ideal ~S/ 2000 para full time
-    if(sueldoPedido >= 1800 && sueldoPedido <= 2200){
-      expectativaScore = 100;
-      expectativaNota = 'Expectativa alineada al rango ideal (~S/ 2,000).';
-    } else if(sueldoPedido >= 1500 && sueldoPedido < 1800){
-      expectativaScore = 75;
-      expectativaNota = 'Expectativa algo por debajo del ideal; aceptable.';
-    } else if(sueldoPedido > 2200 && sueldoPedido <= 2500){
-      expectativaScore = 70;
-      expectativaNota = 'Expectativa ligeramente por encima del ideal; negociable.';
-    } else if(sueldoPedido < 1500){
-      expectativaScore = 45;
-      expectativaNota = 'Expectativa muy baja: riesgo de rotación ante mejores ofertas.';
-    } else {
-      expectativaScore = 35;
-      expectativaNota = 'Expectativa muy por encima del presupuesto del puesto.';
-    }
-  } else {
-    // Part time: ideal ~S/ 1,000 - 1,100
-    if(sueldoPedido >= 900 && sueldoPedido <= 1200){
-      expectativaScore = 100;
-      expectativaNota = 'Expectativa alineada al rango ideal para part time (~S/ 1,050).';
-    } else if(sueldoPedido >= 700 && sueldoPedido < 900){
-      expectativaScore = 75;
-      expectativaNota = 'Expectativa algo por debajo del ideal; aceptable.';
-    } else if(sueldoPedido > 1200 && sueldoPedido <= 1400){
-      expectativaScore = 70;
-      expectativaNota = 'Expectativa ligeramente por encima del ideal; negociable.';
-    } else if(sueldoPedido < 700){
-      expectativaScore = 45;
-      expectativaNota = 'Expectativa muy baja: riesgo de rotación.';
-    } else {
-      expectativaScore = 35;
-      expectativaNota = 'Expectativa muy por encima del presupuesto del puesto.';
-    }
-  }
-
-  const prom = (extro+amab+respo+estab+apert+resil+cercaniaScore+expectativaScore)/8;
-
-  // Perfil conductual
-  let perfil, perfilColor;
-  if(prom>=78 && flags.length===0){ perfil='PERFIL IDEAL — Vendedora estrella'; perfilColor='good'; }
-  else if(prom>=65){ perfil='PERFIL PROMETEDOR — Requiere refuerzo'; perfilColor='warn'; }
-  else if(prom>=50){ perfil='PERFIL MODERADO — Evaluar con cuidado'; perfilColor='warn'; }
-  else { perfil='PERFIL DE RIESGO — No recomendado'; perfilColor='bad'; }
-
-  // Riesgos
-  const riesgos = [];
-  if(estab < 60) riesgos.push('Baja tolerancia a la corrección o al cambio de horario.');
-  if(respo < 60) riesgos.push('Señales de descuido en caja o uso del celular en horario laboral.');
-  if(extro < 60) riesgos.push('Actitud pasiva con el cliente; dificultad para romper el hielo.');
-  if(resil < 60) riesgos.push('Dificultad para manejar objeciones de precio o clientes indecisos.');
-  if(amab < 60)  riesgos.push('Baja empatía percibida; podría no conectar con clientas mayores.');
-  if(pctMem < 50) riesgos.push('Memoria visual por debajo del promedio.');
-  if(pctCal < 50) riesgos.push('Cálculo por debajo del estándar para manejo de caja.');
-  if(cercaniaScore < 50) riesgos.push('Distrito de residencia lejano ('+distrito+'): riesgo de tardanzas o fatiga por viaje.');
-  if(expectativaScore < 55) riesgos.push('Expectativa salarial no alineada: '+expectativaNota);
-
-  // Fortalezas
-  const fortalezas = [];
-  if(extro >= 75) fortalezas.push('Facilidad para iniciar conversación y romper el hielo con humor.');
-  if(amab  >= 75) fortalezas.push('Empatía marcada; genera confianza rápido.');
-  if(respo >= 75) fortalezas.push('Alto sentido de responsabilidad, especialmente en caja.');
-  if(estab >= 75) fortalezas.push('Estabilidad emocional frente a la presión.');
-  if(resil >= 75) fortalezas.push('Resiliencia comercial: maneja objeciones sin perder la venta.');
-  if(apert >= 75) fortalezas.push('Iniciativa y apertura al aprendizaje; ideal para crecer a encargada.');
-  if(pctMem >= 80) fortalezas.push('Memoria visual sobresaliente.');
-  if(pctCal >= 80) fortalezas.push('Cálculo rápido y preciso para caja.');
-  if(cercaniaScore >= 80) fortalezas.push('Reside muy cerca del centro laboral ('+distrito+'): alta disponibilidad y puntualidad probable.');
-  if(expectativaScore >= 85) fortalezas.push('Expectativa salarial alineada con el puesto: '+expectativaNota);
-
-  // Narrativa
-  const nombrePila = (S.registro.nombre||'').split(' ')[0] || 'La postulante';
-  let narrativa = `<b>${nombrePila}</b> obtiene un perfil conductual promedio de <b>${Math.round(prom)}/100</b>. `;
-  narrativa += `En comunicación y persuasión alcanza <b>${Math.round(pctCom)}%</b>, `;
-  narrativa += pctCom>=75 ? 'destacando su capacidad para generar cercanía y cerrar ventas. ' :
-               pctCom>=50 ? 'mostrando margen de mejora en manejo de objeciones. ' :
-               'reflejando timidez o baja iniciativa para interactuar con el cliente. ';
-  narrativa += `En responsabilidad obtiene <b>${Math.round(pctPers)}%</b> y en cálculo de caja <b>${Math.round(pctCal)}%</b>. `;
-  narrativa += `La memoria visual (${Math.round(pctMem)}%) `;
-  narrativa += pctMem>=70 ? 'es un punto fuerte: retiene con facilidad productos y precios. ' : 'sugiere reforzar atención al detalle. ';
-
-  narrativa += `<br><br><b>📍 Contexto logístico y económico:</b> `;
-  narrativa += `Reside en <b>${esc(distrito)}</b> (índice de cercanía a Jesús María: <b>${cercaniaScore}/100</b>). `;
-  narrativa += cercaniaScore >= 75 ? 'Ubicación muy favorable: se espera buena puntualidad y disponibilidad inmediata. ' :
-               cercaniaScore >= 50 ? 'Distancia moderada; conviene confirmar tiempos reales de traslado en la entrevista. ' :
-               'Distancia considerable desde su residencia; verificar tolerancia al traslado diario. ';
-  narrativa += `Su expectativa económica es <b>S/ ${sueldoPedido}</b> para modalidad ${modalidad}. `;
-  narrativa += expectativaNota;
-
-  if(flags.length){
-    narrativa += `<br><br><b>⚠️ Alertas de integridad:</b> ` + flags.join(' ');
-  } else {
-    narrativa += `<br><br><b>✅ Sin alertas de integridad.</b> Test completado en ${S.flags.tiempoTotal}s sin cambios de pestaña ni pegados.`;
-  }
-
-  narrativa += `<br><br><b>Recomendación de la auditoría:</b> `;
-  const combinado = (prom*0.7) + (cercaniaScore*0.15) + (expectativaScore*0.15);
-  if(combinado>=75 && flags.length===0) narrativa += `Avanzar a <b>entrevista presencial</b> y prueba en tienda de 2 horas. Alta probabilidad de encaje con el perfil SAFRI.`;
-  else if(combinado>=60) narrativa += `Citar a entrevista y centrar la evaluación en las dimensiones débiles y en la logística de traslado.`;
-  else if(combinado>=45) narrativa += `Mantener como reserva. Si no hay mejores candidatas, citar a entrevista.`;
-  else narrativa += `Descartar para atención al cliente. Podría considerarse para roles sin trato directo.`;
-
-  return {
-    dimensiones:{
-      'Extroversión y carisma': Math.round(extro),
-      'Amabilidad y empatía': Math.round(amab),
-      'Responsabilidad y ética': Math.round(respo),
-      'Estabilidad emocional': Math.round(estab),
-      'Apertura e iniciativa': Math.round(apert),
-      'Resiliencia comercial': Math.round(resil),
-      'Cercanía al centro laboral': Math.round(cercaniaScore),
-      'Ajuste salarial': Math.round(expectativaScore)
-    },
-    promedio: Math.round(prom),
-    combinado: Math.round(combinado),
-    perfil, perfilColor,
-    fortalezas, riesgos, narrativa,
-    contexto:{
-      distrito, cercaniaScore,
-      sueldoPedido, expectativaScore, expectativaNota,
-      modalidad
-    }
-  };
+function toggleAvanzado(){
+  const el=$('avanzado'),txt=$('toggleTxt');
+  if(el.style.display==='none'){el.style.display='block';txt.textContent='▲ Ocultar opciones avanzadas';}
+  else{el.style.display='none';txt.textContent='▼ Ver opciones avanzadas';}
 }
 
 function copiarCodigo(){
-  const c = $('cod').textContent;
-  navigator.clipboard.writeText(c).then(()=>alert('Código copiado. Envíalo por WhatsApp al número de la tienda.'));
+  const c=$('cod').textContent;
+  navigator.clipboard.writeText(c).then(()=>alert('Código copiado al portapapeles.'));
 }
 function descargarJSON(){
-  const blob = new Blob([JSON.stringify(window.__lastResult,null,2)],{type:'application/json'});
-  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-  a.download = 'postulacion_'+Date.now()+'.json'; a.click();
+  const blob=new Blob([JSON.stringify(window.__lastResult,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='postulacion_'+Date.now()+'.json';a.click();
 }
 
-document.addEventListener('visibilitychange', ()=>{ if(document.hidden) S.flags.tab++; });
+document.addEventListener('visibilitychange',()=>{if(document.hidden)S.flags.tab++;});
 
-/* ============================================================
-   ADMIN
-   ============================================================ */
+/* AUDITORÍA PSICOMÉTRICA */
+function auditarPsicometricamente({pPers,maxPers,pCom,maxCom,pMem,pCal,tiemposCalculo,flags,S}){
+  const resp=S.respuestas;
+  const pctPers=maxPers?(pPers/maxPers)*100:0;
+  const pctCom=maxCom?(pCom/maxCom)*100:0;
+  const pctMem=(pMem/PREGUNTAS_MEMORIA.length)*100;
+  const pctCal=(pCal/PREGUNTAS_CALCULO.length)*100;
+  let extro=pctCom*0.7+pctPers*0.3;
+  let amab=pctCom*0.5+pctPers*0.5;
+  let respo=pctPers*0.6+pctCal*0.4;
+  let estab=((resp.personalidad.p6?.p>=2?90:60)+(resp.personalidad.p2?.p>=2?90:60)+(resp.comunicacion.co4?.p>=2?90:60))/3;
+  let apert=pctPers*0.6+pctCom*0.4;
+  let resil=((resp.comunicacion.co3?.p>=2?90:50)+(resp.comunicacion.co5?.p>=2?90:55)+pctCom)/3;
+  if(resp.personalidad.p4?.p<0)respo-=15;
+  if(resp.personalidad.p5?.p<0)respo-=20;
+  if(resp.personalidad.p2?.p>=3)respo+=10;
+  if(resp.comunicacion.co2?.p>=3)extro+=10;
+  if(resp.comunicacion.co3?.p>=3)resil+=10;
+  if(resp.comunicacion.co1?.p>=3)extro+=5;
+  const penal=flags.length*5;
+  extro=Math.max(0,Math.min(100,extro-penal*0.3));
+  amab=Math.max(0,Math.min(100,amab-penal*0.3));
+  respo=Math.max(0,Math.min(100,respo-penal*0.5));
+  estab=Math.max(0,Math.min(100,estab-penal*0.3));
+  apert=Math.max(0,Math.min(100,apert-penal*0.3));
+  resil=Math.max(0,Math.min(100,resil-penal*0.4));
+
+  const distrito=S.registro.distrito||'';
+  const cercaniaScore=PROXIMIDAD[distrito]??30;
+  const sueldoPedido=+S.registro.sueldo||0;
+  const modalidad=S.registro.modalidad;
+  let expectativaScore=0,expectativaNota='';
+  if(modalidad==='Full time'){
+    if(sueldoPedido>=1800&&sueldoPedido<=2200){expectativaScore=100;expectativaNota='Expectativa alineada al rango ideal (~S/ 2,000).';}
+    else if(sueldoPedido>=1500&&sueldoPedido<1800){expectativaScore=75;expectativaNota='Expectativa algo por debajo del ideal; aceptable.';}
+    else if(sueldoPedido>2200&&sueldoPedido<=2500){expectativaScore=70;expectativaNota='Expectativa ligeramente por encima del ideal; negociable.';}
+    else if(sueldoPedido<1500){expectativaScore=45;expectativaNota='Expectativa muy baja: riesgo de rotación ante mejores ofertas.';}
+    else{expectativaScore=35;expectativaNota='Expectativa muy por encima del presupuesto del puesto.';}
+  } else {
+    if(sueldoPedido>=900&&sueldoPedido<=1200){expectativaScore=100;expectativaNota='Expectativa alineada al rango ideal para part time (~S/ 1,050).';}
+    else if(sueldoPedido>=700&&sueldoPedido<900){expectativaScore=75;expectativaNota='Expectativa algo por debajo del ideal; aceptable.';}
+    else if(sueldoPedido>1200&&sueldoPedido<=1400){expectativaScore=70;expectativaNota='Expectativa ligeramente por encima del ideal; negociable.';}
+    else if(sueldoPedido<700){expectativaScore=45;expectativaNota='Expectativa muy baja: riesgo de rotación.';}
+    else{expectativaScore=35;expectativaNota='Expectativa muy por encima del presupuesto del puesto.';}
+  }
+  const prom=(extro+amab+respo+estab+apert+resil+cercaniaScore+expectativaScore)/8;
+  let perfil,perfilColor;
+  if(prom>=78&&flags.length===0){perfil='PERFIL IDEAL — Vendedora estrella';perfilColor='good';}
+  else if(prom>=65){perfil='PERFIL PROMETEDOR — Requiere refuerzo';perfilColor='warn';}
+  else if(prom>=50){perfil='PERFIL MODERADO — Evaluar con cuidado';perfilColor='warn';}
+  else{perfil='PERFIL DE RIESGO — No recomendado';perfilColor='bad';}
+  const riesgos=[];
+  if(estab<60)riesgos.push('Baja tolerancia a la corrección o al cambio de horario.');
+  if(respo<60)riesgos.push('Señales de descuido en caja o uso del celular en horario laboral.');
+  if(extro<60)riesgos.push('Actitud pasiva con el cliente; dificultad para romper el hielo.');
+  if(resil<60)riesgos.push('Dificultad para manejar objeciones de precio o clientes indecisos.');
+  if(amab<60)riesgos.push('Baja empatía percibida; podría no conectar con clientas mayores.');
+  if(pctMem<50)riesgos.push('Memoria visual por debajo del promedio.');
+  if(pctCal<50)riesgos.push('Cálculo por debajo del estándar para manejo de caja.');
+  if(cercaniaScore<50)riesgos.push('Distrito de residencia lejano ('+distrito+'): riesgo de tardanzas o fatiga por viaje.');
+  if(expectativaScore<55)riesgos.push('Expectativa salarial no alineada: '+expectativaNota);
+  const fortalezas=[];
+  if(extro>=75)fortalezas.push('Facilidad para iniciar conversación y romper el hielo con humor.');
+  if(amab>=75)fortalezas.push('Empatía marcada; genera confianza rápido.');
+  if(respo>=75)fortalezas.push('Alto sentido de responsabilidad, especialmente en caja.');
+  if(estab>=75)fortalezas.push('Estabilidad emocional frente a la presión.');
+  if(resil>=75)fortalezas.push('Resiliencia comercial: maneja objeciones sin perder la venta.');
+  if(apert>=75)fortalezas.push('Iniciativa y apertura al aprendizaje; ideal para crecer a encargada.');
+  if(pctMem>=80)fortalezas.push('Memoria visual sobresaliente.');
+  if(pctCal>=80)fortalezas.push('Cálculo rápido y preciso para caja.');
+  if(cercaniaScore>=80)fortalezas.push('Reside muy cerca del centro laboral ('+distrito+'): alta disponibilidad y puntualidad probable.');
+  if(expectativaScore>=85)fortalezas.push('Expectativa salarial alineada con el puesto: '+expectativaNota);
+
+  const nombrePila=(S.registro.nombre||'').split(' ')[0]||'La postulante';
+  let narrativa=`<b>${nombrePila}</b> obtiene un perfil conductual promedio de <b>${Math.round(prom)}/100</b>. `;
+  narrativa+=`En comunicación y persuasión alcanza <b>${Math.round(pctCom)}%</b>, `;
+  narrativa+=pctCom>=75?'destacando su capacidad para generar cercanía y cerrar ventas. ':pctCom>=50?'mostrando margen de mejora en manejo de objeciones. ':'reflejando timidez o baja iniciativa para interactuar con el cliente. ';
+  narrativa+=`En responsabilidad obtiene <b>${Math.round(pctPers)}%</b> y en cálculo de caja <b>${Math.round(pctCal)}%</b>. `;
+  narrativa+=`La memoria visual (${Math.round(pctMem)}%) `;
+  narrativa+=pctMem>=70?'es un punto fuerte: retiene con facilidad productos y precios. ':'sugiere reforzar atención al detalle. ';
+  narrativa+=`<br><br><b>📍 Contexto logístico y económico:</b> Reside en <b>${esc(distrito)}</b> (índice de cercanía a Jesús María: <b>${cercaniaScore}/100</b>). `;
+  narrativa+=cercaniaScore>=75?'Ubicación muy favorable: se espera buena puntualidad y disponibilidad inmediata. ':cercaniaScore>=50?'Distancia moderada; conviene confirmar tiempos reales de traslado en la entrevista. ':'Distancia considerable desde su residencia; verificar tolerancia al traslado diario. ';
+  narrativa+=`Su expectativa económica es <b>S/ ${sueldoPedido}</b> para modalidad ${modalidad}. `+expectativaNota;
+  if(flags.length){narrativa+=`<br><br><b>⚠️ Alertas de integridad:</b> `+flags.join(' ');}
+  else{narrativa+=`<br><br><b>✅ Sin alertas de integridad.</b> Test completado en ${S.flags.tiempoTotal}s sin cambios de pestaña ni pegados.`;}
+  narrativa+=`<br><br><b>Recomendación de la auditoría:</b> `;
+  const combinado=(prom*0.7)+(cercaniaScore*0.15)+(expectativaScore*0.15);
+  if(combinado>=75&&flags.length===0)narrativa+=`Avanzar a <b>entrevista presencial</b> y prueba en tienda de 2 horas. Alta probabilidad de encaje con el perfil SAFRI.`;
+  else if(combinado>=60)narrativa+=`Citar a entrevista y centrar la evaluación en las dimensiones débiles y en la logística de traslado.`;
+  else if(combinado>=45)narrativa+=`Mantener como reserva. Si no hay mejores candidatas, citar a entrevista.`;
+  else narrativa+=`Descartar para atención al cliente. Podría considerarse para roles sin trato directo.`;
+
+  return {
+    dimensiones:{'Extroversión y carisma':Math.round(extro),'Amabilidad y empatía':Math.round(amab),'Responsabilidad y ética':Math.round(respo),'Estabilidad emocional':Math.round(estab),'Apertura e iniciativa':Math.round(apert),'Resiliencia comercial':Math.round(resil),'Cercanía al centro laboral':Math.round(cercaniaScore),'Ajuste salarial':Math.round(expectativaScore)},
+    promedio:Math.round(prom),combinado:Math.round(combinado),perfil,perfilColor,fortalezas,riesgos,narrativa,
+    contexto:{distrito,cercaniaScore,sueldoPedido,expectativaScore,expectativaNota,modalidad}
+  };
+}
+
+/* ADMIN */
 function pedirAdmin(){
-  const p = prompt('Ingrese clave de administrador:');
-  if(p === ADMIN_PASSWORD) vAdmin();
-  else if(p !== null) alert('Clave incorrecta.');
+  const p=prompt('Ingrese clave de administrador:');
+  if(p===ADMIN_PASSWORD)vAdmin();
+  else if(p!==null)alert('Clave incorrecta.');
 }
-
 function vAdmin(){
-  const lista = JSON.parse(localStorage.getItem('postulantes_jm')||'[]');
+  const lista=JSON.parse(localStorage.getItem('postulantes_jm')||'[]');
   render(`
   <div class="card">
     <h2>🔐 Panel de administrador</h2>
@@ -930,7 +681,7 @@ function vAdmin(){
     <br><br>
     <button class="btn" onclick="evalCode()">Evaluar código</button>
     <h3 style="margin-top:22px">2) Postulantes guardados en este dispositivo (${lista.length})</h3>
-    ${lista.length===0 ? '<p style="color:var(--muted);font-size:13px">Aún no hay registros locales.</p>' :
+    ${lista.length===0?'<p style="color:var(--muted);font-size:13px">Aún no hay registros locales.</p>':
       `<table>
         <tr><th>Fecha</th><th>Nombre</th><th>Modalidad</th><th>Psico</th><th>Combinado</th><th>Alertas</th><th></th></tr>
         ${lista.map((r,i)=>`
@@ -938,103 +689,60 @@ function vAdmin(){
             <td>${new Date(r.fecha).toLocaleDateString()}</td>
             <td>${esc(r.nombre)}</td>
             <td>${esc(r.modalidad)}</td>
-            <td><b>${r.psicometrico?.promedio ?? '-'}</b></td>
-            <td><b>${r.psicometrico?.combinado ?? '-'}</b></td>
-            <td>${r.flags.length ? `<span class="tag p">${r.flags.length}</span>` : '<span class="tag g">0</span>'}</td>
+            <td><b>${r.psicometrico?.promedio??'-'}</b></td>
+            <td><b>${r.psicometrico?.combinado??'-'}</b></td>
+            <td>${r.flags.length?`<span class="tag p">${r.flags.length}</span>`:'<span class="tag g">0</span>'}</td>
             <td><button class="btn-ghost btn" style="padding:5px 10px;font-size:12px" onclick="verDetalle(${i})">Ver</button></td>
           </tr>`).join('')}
       </table>`}
-    <h3 style="margin-top:22px">3) Exportar todo (CSV)</h3>
+    <h3 style="margin-top:22px">3) Exportar</h3>
     <button class="btn btn-ghost" onclick="exportCSV()">⬇️ Descargar CSV</button>
     <button class="btn btn-ghost" onclick="borrarTodo()">🗑️ Borrar registros locales</button>
     <div id="detalleBox"></div>
   </div>`);
 }
-
 function evalCode(){
-  const code = $('inpCode').value.trim();
-  const r = decodeRes(code);
-  if(!r){ alert('Código inválido.'); return; }
-  $('detalleBox').innerHTML = renderDetalle(r);
+  const code=$('inpCode').value.trim();
+  const r=decodeRes(code);
+  if(!r){alert('Código inválido.');return;}
+  $('detalleBox').innerHTML=renderDetalle(r);
   $('detalleBox').scrollIntoView({behavior:'smooth'});
 }
-
 function verDetalle(i){
-  const lista = JSON.parse(localStorage.getItem('postulantes_jm')||'[]');
-  $('detalleBox').innerHTML = renderDetalle(lista[i]);
+  const lista=JSON.parse(localStorage.getItem('postulantes_jm')||'[]');
+  $('detalleBox').innerHTML=renderDetalle(lista[i]);
   $('detalleBox').scrollIntoView({behavior:'smooth'});
 }
-
 function renderDetalle(r){
-  const pct = Math.round(100 * r.puntajes.personalidad / r.puntajes.maxPersonalidad);
-  const pctCom = r.puntajes.maxComunicacion ? Math.round(100 * r.puntajes.comunicacion / r.puntajes.maxComunicacion) : 0;
-  const pctM = Math.round(100 * r.puntajes.memoria / r.puntajes.maxMemoria);
-  const pctC = Math.round(100 * r.puntajes.calculo / r.puntajes.maxCalculo);
-
-  const pers = PREGUNTAS_PERSONALIDAD.map(q=>{
-    const a = r.respuestas.personalidad[q.id];
-    return `<div class="qa"><div class="q">${esc(q.texto)}</div><div class="a">→ ${a?esc(a.txt)+' ('+a.p+' pts)':'Sin respuesta'}</div></div>`;
-  }).join('');
-  const com = PREGUNTAS_COMUNICACION.map(q=>{
-    const a = r.respuestas.comunicacion?.[q.id];
-    return `<div class="qa"><div class="q">${esc(q.texto)}</div><div class="a">→ ${a?esc(a.txt)+' ('+a.p+' pts)':'Sin respuesta'}</div></div>`;
-  }).join('');
-  const mem = PREGUNTAS_MEMORIA.map(q=>{
-    const a = r.respuestas.memoria[q.id];
-    return `<div class="qa"><div class="q">${esc(q.t)}</div><div class="a">→ ${a?esc(a.txt)+(a.correcta?' ✅':' ❌'):'Sin respuesta'}</div></div>`;
-  }).join('');
-  const cal = PREGUNTAS_CALCULO.map((q,i)=>{
-    const a = r.respuestas.calculo[q.id];
-    const t = r.tiemposCalculo?.[i];
-    return `<div class="qa"><div class="q">${esc(q.t)}</div><div class="a">→ ${a?esc(a.txt)+(a.correcta?' ✅':' ❌'):'Sin respuesta'}${t?` (${t}s)`:''}</div></div>`;
-  }).join('');
-  const ab = PREGUNTAS_ABIERTAS.map(q=>{
-    return `<div class="qa"><div class="q">${esc(q.t)}</div><div class="a">"${esc(r.respuestas.abiertas[q.id]||'')}"</div></div>`;
-  }).join('');
-
-  // Bloque psicométrico
-  let psicoHTML = '';
+  const pct=Math.round(100*r.puntajes.personalidad/r.puntajes.maxPersonalidad);
+  const pctCom=r.puntajes.maxComunicacion?Math.round(100*r.puntajes.comunicacion/r.puntajes.maxComunicacion):0;
+  const pctM=Math.round(100*r.puntajes.memoria/r.puntajes.maxMemoria);
+  const pctC=Math.round(100*r.puntajes.calculo/r.puntajes.maxCalculo);
+  const pers=PREGUNTAS_PERSONALIDAD.map(q=>{const a=r.respuestas.personalidad[q.id];return `<div class="qa"><div class="q">${esc(q.texto)}</div><div class="a">→ ${a?esc(a.txt)+' ('+a.p+' pts)':'Sin respuesta'}</div></div>`;}).join('');
+  const com=PREGUNTAS_COMUNICACION.map(q=>{const a=r.respuestas.comunicacion?.[q.id];return `<div class="qa"><div class="q">${esc(q.texto)}</div><div class="a">→ ${a?esc(a.txt)+' ('+a.p+' pts)':'Sin respuesta'}</div></div>`;}).join('');
+  const mem=PREGUNTAS_MEMORIA.map(q=>{const a=r.respuestas.memoria[q.id];return `<div class="qa"><div class="q">${esc(q.t)}</div><div class="a">→ ${a?esc(a.txt)+(a.correcta?' ✅':' ❌'):'Sin respuesta'}</div></div>`;}).join('');
+  const cal=PREGUNTAS_CALCULO.map((q,i)=>{const a=r.respuestas.calculo[q.id],t=r.tiemposCalculo?.[i];return `<div class="qa"><div class="q">${esc(q.t)}</div><div class="a">→ ${a?esc(a.txt)+(a.correcta?' ✅':' ❌'):'Sin respuesta'}${t?` (${t}s)`:''}</div></div>`;}).join('');
+  const ab=PREGUNTAS_ABIERTAS.map(q=>`<div class="qa"><div class="q">${esc(q.t)}</div><div class="a">"${esc(r.respuestas.abiertas[q.id]||'')}"</div></div>`).join('');
+  let psicoHTML='';
   if(r.psicometrico){
-    const p = r.psicometrico;
-    const dims = Object.entries(p.dimensiones).map(([k,v])=>{
-      const color = v>=75 ? 'linear-gradient(90deg,#10b981,#059669)' :
-                    v>=55 ? 'linear-gradient(90deg,#f59e0b,#d97706)' :
-                            'linear-gradient(90deg,#ef4444,#b91c1c)';
-      return `<div class="psy-dim"><label><span>${k}</span><b>${v}/100</b></label>
-        <div class="psy-bar"><div style="width:${v}%;background:${color}"></div></div></div>`;
+    const p=r.psicometrico;
+    const dims=Object.entries(p.dimensiones).map(([k,v])=>{
+      const color=v>=75?'linear-gradient(90deg,#10b981,#059669)':v>=55?'linear-gradient(90deg,#f59e0b,#d97706)':'linear-gradient(90deg,#ef4444,#b91c1c)';
+      return `<div class="psy-dim"><label><span>${k}</span><b>${v}/100</b></label><div class="psy-bar"><div style="width:${v}%;background:${color}"></div></div></div>`;
     }).join('');
-
-    const ctx = p.contexto;
-    const ctxHTML = `
-      <div class="ctx-grid">
-        <div class="ctx-card">
-          <div class="lbl">📍 Distrito</div>
-          <div class="val">${esc(ctx.distrito)}</div>
-          <div class="det">Cercanía a Jesús María: <b>${ctx.cercaniaScore}/100</b></div>
-        </div>
-        <div class="ctx-card">
-          <div class="lbl">💰 Expectativa (${esc(ctx.modalidad)})</div>
-          <div class="val">S/ ${ctx.sueldoPedido}</div>
-          <div class="det">Ajuste: <b>${ctx.expectativaScore}/100</b> · ${esc(ctx.expectativaNota)}</div>
-        </div>
-      </div>`;
-
-    psicoHTML = `
+    const ctx=p.contexto;
+    const ctxHTML=`<div class="ctx-grid"><div class="ctx-card"><div class="lbl">📍 Distrito</div><div class="val">${esc(ctx.distrito)}</div><div class="det">Cercanía: <b>${ctx.cercaniaScore}/100</b></div></div><div class="ctx-card"><div class="lbl">💰 Expectativa (${esc(ctx.modalidad)})</div><div class="val">S/ ${ctx.sueldoPedido}</div><div class="det">Ajuste: <b>${ctx.expectativaScore}/100</b> · ${esc(ctx.expectativaNota)}</div></div></div>`;
+    psicoHTML=`
       <div class="psy-box">
         <h4>🤖 AUDITORÍA PSICOMÉTRICA (IA)</h4>
-        <p style="font-size:14px;margin-bottom:12px">
-          <span class="chip ${p.perfilColor}">${esc(p.perfil)}</span>
-          &nbsp;·&nbsp; Perfil conductual: <b>${p.promedio}/100</b>
-          &nbsp;·&nbsp; Score combinado: <b>${p.combinado}/100</b>
-        </p>
+        <p style="font-size:14px;margin-bottom:12px"><span class="chip ${p.perfilColor}">${esc(p.perfil)}</span> &nbsp;·&nbsp; Perfil: <b>${p.promedio}/100</b> &nbsp;·&nbsp; Combinado: <b>${p.combinado}/100</b></p>
         ${ctxHTML}
         <div style="margin-top:10px">${dims}</div>
-        ${p.fortalezas.length ? `<div style="margin-top:12px"><b style="color:#065f46;font-size:13px">✅ Fortalezas detectadas</b><ul style="margin-left:18px;font-size:13px;line-height:1.7;color:#374151">${p.fortalezas.map(f=>`<li>${esc(f)}</li>`).join('')}</ul></div>`:''}
-        ${p.riesgos.length ? `<div style="margin-top:10px"><b style="color:#991b1b;font-size:13px">⚠️ Riesgos detectados</b><ul style="margin-left:18px;font-size:13px;line-height:1.7;color:#374151">${p.riesgos.map(f=>`<li>${esc(f)}</li>`).join('')}</ul></div>`:''}
+        ${p.fortalezas.length?`<div style="margin-top:12px"><b style="color:#065f46;font-size:13px">✅ Fortalezas</b><ul style="margin-left:18px;font-size:13px;line-height:1.7;color:#374151">${p.fortalezas.map(f=>`<li>${esc(f)}</li>`).join('')}</ul></div>`:''}
+        ${p.riesgos.length?`<div style="margin-top:10px"><b style="color:#991b1b;font-size:13px">⚠️ Riesgos</b><ul style="margin-left:18px;font-size:13px;line-height:1.7;color:#374151">${p.riesgos.map(f=>`<li>${esc(f)}</li>`).join('')}</ul></div>`:''}
         <div class="psy-narrative">${p.narrativa}</div>
       </div>`;
   }
-
   return `
   <div class="detail" style="margin-top:20px;border:2px solid var(--primary)">
     <h4 style="font-size:16px">👤 ${esc(r.nombre)}</h4>
@@ -1048,47 +756,42 @@ function renderDetalle(r){
     <h4>Puntajes</h4>
     <p style="font-size:13px">
       Personalidad: <b>${r.puntajes.personalidad}/${r.puntajes.maxPersonalidad}</b> (${pct}%)<br>
-      Comunicación: <b>${r.puntajes.comunicacion ?? '-'}/${r.puntajes.maxComunicacion ?? '-'}</b> (${pctCom}%)<br>
+      Comunicación: <b>${r.puntajes.comunicacion??'-'}/${r.puntajes.maxComunicacion??'-'}</b> (${pctCom}%)<br>
       Memoria visual: <b>${r.puntajes.memoria}/${r.puntajes.maxMemoria}</b> (${pctM}%)<br>
       Cálculo caja: <b>${r.puntajes.calculo}/${r.puntajes.maxCalculo}</b> (${pctC}%)<br>
-      Tiempo total: <b>${r.flagCount.tiempoTotal} s</b> · Cambios pestaña: <b>${r.flagCount.tab}</b> · Pegados: <b>${r.flagCount.paste}</b>
+      Tiempo total: <b>${r.flagCount.tiempoTotal} s</b> · Pestañas: <b>${r.flagCount.tab}</b> · Pegados: <b>${r.flagCount.paste}</b>
     </p>
     ${psicoHTML}
-    ${r.flags.length ? `<h4>⚠️ Alertas de integridad</h4><ul style="margin-left:18px;font-size:13px;color:#991b1b">${r.flags.map(f=>`<li>${esc(f)}</li>`).join('')}</ul>`:''}
+    ${r.flags.length?`<h4>⚠️ Alertas de integridad</h4><ul style="margin-left:18px;font-size:13px;color:#991b1b">${r.flags.map(f=>`<li>${esc(f)}</li>`).join('')}</ul>`:''}
     <h4>Sección 1: Personalidad</h4>${pers}
-    <h4>Sección 2: Comunicación y persuasión</h4>${com}
+    <h4>Sección 2: Comunicación</h4>${com}
     <h4>Sección 3: Memoria visual</h4>${mem}
     <h4>Sección 4: Cálculo</h4>${cal}
     <h4>Sección 5: Preguntas abiertas</h4>${ab}
   </div>`;
 }
-
 function exportCSV(){
-  const lista = JSON.parse(localStorage.getItem('postulantes_jm')||'[]');
-  if(!lista.length){ alert('Sin registros.'); return; }
-  const head = ['Fecha','Nombre','DNI','Edad','Correo','Telefono','Grado','Distrito','CercaniaScore','Modalidad','Permanencia','Turno','Disponibilidad','Sueldo','AjusteSalarial','PjePsicometrico','ScoreCombinado','Perfil','PjePersonalidad','PjeComunicacion','PjeMemoria','PjeCalculo','TiempoSeg','CambiosPestana','Pegados','Flags'];
-  const rows = lista.map(r=>[
-    new Date(r.fecha).toLocaleString(), r.nombre, r.dni, r.edad, r.correo, r.telefono, r.grado, r.distrito,
-    r.psicometrico?.contexto?.cercaniaScore,
-    r.modalidad, r.permanencia, r.turno, r.disponibilidad, r.sueldo,
-    r.psicometrico?.contexto?.expectativaScore,
-    r.psicometrico?.promedio, r.psicometrico?.combinado, r.psicometrico?.perfil,
-    r.puntajes.personalidad, r.puntajes.comunicacion, r.puntajes.memoria, r.puntajes.calculo,
-    r.flagCount.tiempoTotal, r.flagCount.tab, r.flagCount.paste, r.flags.join(' | ')
+  const lista=JSON.parse(localStorage.getItem('postulantes_jm')||'[]');
+  if(!lista.length){alert('Sin registros.');return;}
+  const head=['Fecha','Nombre','DNI','Edad','Correo','Telefono','Grado','Distrito','CercaniaScore','Modalidad','Permanencia','Turno','Disponibilidad','Sueldo','AjusteSalarial','PjePsicometrico','ScoreCombinado','Perfil','PjePersonalidad','PjeComunicacion','PjeMemoria','PjeCalculo','TiempoSeg','CambiosPestana','Pegados','Flags'];
+  const rows=lista.map(r=>[
+    new Date(r.fecha).toLocaleString(),r.nombre,r.dni,r.edad,r.correo,r.telefono,r.grado,r.distrito,
+    r.psicometrico?.contexto?.cercaniaScore,r.modalidad,r.permanencia,r.turno,r.disponibilidad,r.sueldo,
+    r.psicometrico?.contexto?.expectativaScore,r.psicometrico?.promedio,r.psicometrico?.combinado,r.psicometrico?.perfil,
+    r.puntajes.personalidad,r.puntajes.comunicacion,r.puntajes.memoria,r.puntajes.calculo,
+    r.flagCount.tiempoTotal,r.flagCount.tab,r.flagCount.paste,r.flags.join(' | ')
   ]);
-  const csv = [head, ...rows].map(r=>r.map(c=>`"${String(c??'').replace(/"/g,'""')}"`).join(',')).join('\n');
-  const blob = new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});
-  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-  a.download = 'postulantes_'+Date.now()+'.csv'; a.click();
+  const csv=[head,...rows].map(r=>r.map(c=>`"${String(c??'').replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='postulantes_'+Date.now()+'.csv';a.click();
 }
-
 function borrarTodo(){
   if(confirm('¿Borrar todos los registros locales? Esta acción no se puede deshacer.')){
-    localStorage.removeItem('postulantes_jm'); vAdmin();
+    localStorage.removeItem('postulantes_jm');vAdmin();
   }
 }
 
-/* INIT */
 vRegistro();
 </script>
 </body>
